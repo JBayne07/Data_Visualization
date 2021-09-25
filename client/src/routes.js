@@ -1,13 +1,15 @@
-import Navbar from './components/navbar'
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+
+import navbar from './components/navbar';
 
 const Routes = () => {
-    retunr (
+    return (
         <div>
             <Router>
-
+                
             </Router>
         </div>
     )
 }
 
-export default Routes
+export default Routes;

@@ -1,13 +1,13 @@
-require('dotenv').config();
 const express = require('express');
-const Mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const routes = require('./routes/routes');
+require('dotenv').config();
 
 const app = express();
 
 const port = process.env.PORT;
 
-Mongoose.connect(process.env.DB).then(() => {
+mongoose.connect(process.env.DB).then(() => {
     console.log('Database Connected')
 })
 
