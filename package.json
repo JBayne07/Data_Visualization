@@ -22,7 +22,8 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.7"
+    "mongoose": "^6.0.7",
+    "xhr2": "^0.2.1"
   },
   "devDependencies": {
     "concurrently": "^6.2.1",

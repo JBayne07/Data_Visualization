@@ -1,15 +1,26 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
-import Routes from './routes';
+import React, {Component} from 'react'
+// import Routes from './routes';
 import Navbar from './components/navbar';
 
-function App() {
-  return (
-    <div className="App">
-      <Navbar/>
-      <Routes/>
-    </div>
-  );
+class App extends Component{
+  render(){
+    return(
+      <div>
+        <Navbar />
+      </div>
+    )
+  }
 }
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <Navbar/>
+//       <Routes/>
+//     </div>
+//   );
+// }
 
 export default App;
