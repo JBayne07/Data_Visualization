@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, BrowserRouter as Router } from 'react-router-dom';
 import { AppBar, Box, Toolbar, Typography, Button, IconButton} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -19,7 +20,13 @@ const Navbar = () => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 My App
               </Typography>
-              <Button color="inherit">Sorting</Button>
+              <Button color="inherit">
+                <Router>
+                  <Link to='/pages/sort.js' className='SortPage'>
+                  Sorting
+                  </Link>
+                </Router>
+              </Button>
               <Button color="inherit">Graph</Button>
             </Toolbar>
           </AppBar>

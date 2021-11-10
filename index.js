@@ -5,11 +5,12 @@ require('dotenv').config();
 
 const app = express();
 
-const port = process.env.PORT;
+const port = 9000;//process.env.PORT;
 
-mongoose.connect(process.env.DB).then(() => {
-    console.log('Database Connected')
-})
+// mongoose.connect(process.env.DB).then(() => {
+//     console.log('Database Connected')
+// })
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(function (req, res, next) {
