@@ -1,12 +1,13 @@
-import { Sort } from "./pages/sort";
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import {Sort} from "./pages/sort";
+import React from "react";
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 
 const Routes = () => {
     return (
-        <div>
-            <Router>
-                <Route path ='routes' component={Sort}/>
-            </Router>
+        <div>            
+            <Switch>
+                <Route exact path ='/sort' component={Sort}/>
+            </Switch>    
         </div>
     )
 }

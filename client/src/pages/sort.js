@@ -1,6 +1,8 @@
 
 export const Sort = () => {
-    <h1>
-        Sorting Page
-    </h1>
+    return(
+        <h1>
+            Sorting Page
+        </h1>
+    );    
 }
