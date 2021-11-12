@@ -1,6 +1,11 @@
 
 export const Bar = () => {
-    <svg width='400' height='400'>
-        <rect width='20' height='100'/>
-    </svg>
+    return(
+        <>
+            <svg width='30' height='100'>
+                <rect width='20' height='100'/>
+            </svg>
+        </> 
+    )
+      
 }

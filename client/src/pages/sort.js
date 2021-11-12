@@ -1,8 +1,12 @@
+import { Bar } from "../components/bar";
+
 
 export const Sort = () => {
     return(
-        <h1>
-            Sorting Page
-        </h1>
+        <>
+            <Bar/>
+            <Bar/>
+            <Bar/>
+        </>
     );    
 }
