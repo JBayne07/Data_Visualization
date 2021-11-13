@@ -22,7 +22,7 @@ const Navbar = () => {
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 My App
               </Typography>
-              <Button color="inherit">               
+              <Button variant="contained" color="inherit">               
                   <Link to='/sort' className='SortPage' color="inherit">
                     Sorting
                   </Link>

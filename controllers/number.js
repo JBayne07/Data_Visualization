@@ -18,7 +18,10 @@ module.exports.add_num = async (req, res) => {
 
 //TODO:
 module.exports.get_all_num = async (req, res) => {
-    
+    let data = [];
+    await Num.find({});
+    data.push(Num.find({}));
+    console.log(data);
 };
 //TODO:
 module.exports.get_num = async (req, res) => {

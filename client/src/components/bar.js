@@ -6,6 +6,5 @@ export const Bar = () => {
                 <rect width='20' height='100'/>
             </svg>
         </> 
-    )
-      
+    )      
 }

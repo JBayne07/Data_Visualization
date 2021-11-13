@@ -1,4 +1,4 @@
-import { Sort } from "./pages/sort";
+import { Sort } from "./components/sort";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
