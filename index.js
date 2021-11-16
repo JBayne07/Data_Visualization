@@ -8,7 +8,7 @@ const app = express();
 const port = process.env.PORT;
 
 mongoose.connect(process.env.DB).then(() => {
-    console.log('Database Connected')
+    console.log('Database Connected\n');
 })
 
 app.use(express.json());

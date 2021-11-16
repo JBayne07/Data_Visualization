@@ -1,6 +1,7 @@
 const Num = require( '../models/number');
 
-module.exports.add_num = async (req, res) => {
+module.exports.addNum = async (req, res) => {
+    console.log('You called me');
     let num = req.body.value;
     // try {
     //     num = req.value;
@@ -17,18 +18,24 @@ module.exports.add_num = async (req, res) => {
 };
 
 //TODO:
-module.exports.get_all_num = async (req, res) => {
-    let data = [];
-    await Num.find({});
-    data.push(Num.find({}));
-    console.log(data);
+module.exports.getAllNum = async (req, res) => {
+    console.log('You called me');
+    
+    let numArr = [];
+    await Num.find(function(err, result){
+        if(err) throw err;
+        numArr.push(result);
+        res.status(200).json({
+            array: numArr
+        })
+    }).clone().catch(function(err){console.log(err)})
 };
 //TODO:
-module.exports.get_num = async (req, res) => {
+module.exports.getNum = async (req, res) => {
     
 };
 //TODO:
-module.exports.delete_num = async (req, res) => {
+module.exports.deleteNum = async (req, res) => {
     
 };
 
