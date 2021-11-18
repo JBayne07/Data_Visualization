@@ -1,9 +1,8 @@
-import { Bar } from "./bar";
+import { BarContainer } from "./barContainer";
 import { Button } from "@mui/material";
 import './sort.css'
-import { useEffect } from "react";
+import { useEffect, useCallback, useState } from "react";
 let list = [];
-let width = 5;
 
 let array = [0,2,4,5,623,5,5,2,36,88,4,765,3,5637,37];
 
@@ -19,20 +18,9 @@ const bubbleSort = () => {
     }
 }
 
-const showData = ({list}) => {
-    // initialMousePosition={array:list};
-    // const [mousePosition, setMousePosition] = useState(
-    //     initialMousePosition
-    //   );
+export const Sort = () => {    
 
-    console.log(list[0].value);
-    for(let i = 0; i < 20; ++i){
-        
-    }
-}
-
-export const Sort = () => {
-    useEffect (() => {
+    useEffect ( async () => {
         console.log("hi page loaded");
         fetch('http://localhost:9000/api/numbers',{
             method: 'GET'
@@ -42,7 +30,26 @@ export const Sort = () => {
         .then(() => console.log('frontend: ' ,list))
         }, [])
     
+    const initialParameters = {paramArr:list};
+
+    const [parameters, setParameters] = useState(
+        initialParameters
+    );
     
+    // Need to add visibility state when rendering the bar container component
+
+    const [visibility, setVisibility] = useState(false);
+
+    const showData = (list) => {
+        // initialMousePosition={array:list};
+        // const [mousePosition, setMousePosition] = useState(
+        //     initialMousePosition
+        //   );
+        setParameters({paramArr:list});
+        console.log('hi:',list);
+        // console.log(list[0].value);
+    }
+
     return(
 
         <div className='sort' >
@@ -53,19 +60,15 @@ export const Sort = () => {
                 Bubble
             </Button>
 
-            <Button variant="outlined" onClick={showData} >
+            <Button variant="outlined" onClick={() => showData(list)} >
                 Show Data
             </Button>
 
             <br/>
             <br/>
-            {list.map(index =>(
-                <Bar height={index.value/1000} width={width}/>
-            ))}
+            
+            {/* <BarContainer paramArr={parameters}/> */}
 
-                <Bar height='750' width={width}/>
-                <Bar height='250' width={width}/>
-                <Bar height='550' width={width}/>
         </div>
     );    
 }
