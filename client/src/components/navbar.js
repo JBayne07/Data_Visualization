@@ -5,7 +5,7 @@ import { AppBar, Box, Toolbar, Typography, Button, IconButton} from '@mui/materi
 import MenuIcon from '@mui/icons-material/Menu';
 
 
-const Navbar = () => {
+export const Navbar = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
@@ -23,6 +23,11 @@ const Navbar = () => {
                 My App
               </Typography>
               <Button variant="contained" color="inherit">               
+                  <Link to='/' className='HomePage' color="inherit">
+                    Home
+                  </Link>
+              </Button>
+              <Button variant="contained" color="inherit">               
                   <Link to='/sort' className='SortPage' color="inherit">
                     Sorting
                   </Link>
@@ -33,5 +38,3 @@ const Navbar = () => {
         </Box>
     );
 }
-
-export default Navbar;

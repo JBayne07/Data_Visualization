@@ -1,53 +1,55 @@
 import { BarContainer } from "./barContainer";
 import { Button } from "@mui/material";
 import './sort.css'
-import { useEffect, useCallback, useState } from "react";
-let list = [];
-
-let array = [0,2,4,5,623,5,5,2,36,88,4,765,3,5637,37];
-
-const bubbleSort = () => {
-    for(let i = 0; i < array.length; ++i){
-        for(let j = 0; j < array.length; ++j){
-            if(array[j] > array[j+1]){
-                let temp = array[j];
-                array[j] = array[j+1];
-                array[j+1] = temp;
-            }
-        }
-    }
-}
+import { useEffect, useState } from "react";
+let totalArr = [];
+let arr = [];
+const initialParameters = {paramArr:totalArr};
 
 export const Sort = () => {    
 
-    useEffect ( async () => {
+    useEffect (() => {
         console.log("hi page loaded");
         fetch('http://localhost:9000/api/numbers',{
             method: 'GET'
         })
         .then(response => response.json())        
-        .then(data => list = data.array[0])
-        .then(() => console.log('frontend: ' ,list))
-        }, [])
-    
-    const initialParameters = {paramArr:list};
+        .then(data => totalArr = data.array[0])
+        .then(() => console.log('frontend: ' , totalArr))
+        }, [])    
 
     const [parameters, setParameters] = useState(
         initialParameters
     );
-    
-    // Need to add visibility state when rendering the bar container component
 
     const [visibility, setVisibility] = useState(false);
 
-    const showData = (list) => {
-        // initialMousePosition={array:list};
-        // const [mousePosition, setMousePosition] = useState(
-        //     initialMousePosition
-        //   );
-        setParameters({paramArr:list});
-        console.log('hi:',list);
-        // console.log(list[0].value);
+    const showData = (array) => {
+        arr = array.slice(0,210);
+        setVisibility(true);
+        setParameters({paramArr:arr});
+    }
+    
+    const hideData = () => {        
+        setVisibility(false);
+    }
+
+    const bubbleSort = async (array) => {
+        if(visibility){
+            for(let i = 0; i < array.length; ++i){
+                for(let j = 0; j < array.length-i-1; ++j){
+                    setTimeout(() =>{
+                        if(array[j].value > array[j+1].value){
+                            let temp = array[j].value;
+                            array[j].value = array[j+1].value;
+                            array[j+1].value = temp;
+                            setParameters({paramArr:array});
+                        }  
+                    }, 5)
+                                      
+                }
+            }
+        }
     }
 
     return(
@@ -56,18 +58,21 @@ export const Sort = () => {
             
             <br/>
 
-            <Button variant="outlined" onClick={bubbleSort} >
+            <Button variant="outlined" onClick={() => bubbleSort(arr)} >
                 Bubble
             </Button>
 
-            <Button variant="outlined" onClick={() => showData(list)} >
+            <Button variant="outlined" onClick={() => showData(totalArr)} >
                 Show Data
+            </Button>
+
+            <Button variant="outlined" onClick={hideData} >
+                Hide Data
             </Button>
 
             <br/>
             <br/>
-            
-            {/* <BarContainer paramArr={parameters}/> */}
+            {visibility ? <BarContainer paramArr={parameters}/> : null}
 
         </div>
     );    
