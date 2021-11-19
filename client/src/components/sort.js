@@ -4,7 +4,8 @@ import './sort.css'
 import { useEffect, useState } from "react";
 let totalArr = [];
 let arr = [];
-const initialParameters = {paramArr:totalArr};
+let shuffledArr = [];
+const initialParameters = {paramArr:totalArr, colour:"black"};
 
 export const Sort = () => {    
 
@@ -25,9 +26,10 @@ export const Sort = () => {
     const [visibility, setVisibility] = useState(false);
 
     const showData = (array) => {
-        arr = array.slice(0,210);
+        shuffledArr = array.sort(() => 0.5 - Math.random());
+        arr = shuffledArr.slice(0,250);
         setVisibility(true);
-        setParameters({paramArr:arr});
+        setParameters(...,{paramArr:arr, colour:'black'});
     }
     
     const hideData = () => {        
@@ -38,15 +40,16 @@ export const Sort = () => {
         if(visibility){
             for(let i = 0; i < array.length; ++i){
                 for(let j = 0; j < array.length-i-1; ++j){
-                    setTimeout(() =>{
+                    setTimeout(() => {
                         if(array[j].value > array[j+1].value){
                             let temp = array[j].value;
                             array[j].value = array[j+1].value;
                             array[j+1].value = temp;
-                            setParameters({paramArr:array});
-                        }  
-                    }, 5)
-                                      
+                            setParameters({paramArr:array, colour:'green'})
+                        }else{
+                            setParameters({paramArr:array, colour:'red'})
+                        }
+                    }, 20)
                 }
             }
         }
