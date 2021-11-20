@@ -3,16 +3,17 @@ const Num = require( '../models/number');
 module.exports.addNum = async (req, res) => {
     console.log('You called me');
     let num = req.body.value;
+    let c = req.body.colour
     // try {
     //     num = req.value;
     // } catch (e) {
     //     res.status(400).json('Bad request!');
     // }    
 
-    let number = new Num({value: num});
+    let number = new Num({value: num, colour: c});
     await number.save(function(err, number){
         if(err) return console.error(err);
-        console.log('Successfully inserted ' + number.value);
+        console.log('Successfully inserted ' + number.value + ' ' + number.colour);
     })
     res.status(200).json(number)
 };
