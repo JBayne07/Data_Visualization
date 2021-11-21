@@ -2,11 +2,11 @@ import { BarContainer } from "./barContainer";
 import { Button, Slider, Box } from "@mui/material";
 import './sort.css'
 import { useEffect, useState } from "react";
-let array = [38, 27, 43, 3, 9, 82, 10]
+// let testArray = [38, 27, 43, 3, 9, 82, 10]
 let totalArr = [];
 let arr = [];
 let shuffledArr = [];
-const initialParameters = {paramArr:totalArr, };
+const initialParameters = {paramArr:totalArr};
 
 // Need to add animation to make it look better
 
@@ -17,21 +17,6 @@ const swap = (array, num1, num2) => {
     array[num2].value = temp;
     array[num2].colour = "green";
     array[num1].colour = c;
-}
-
-const merge = (array, left, middle, right) => {
-    
-}
-
-const mergeSort = (array, left, right) => {
-    // let c = array[0].colour;
-    if(left>=right){
-        return;
-    }
-    let middle = (left+(right))/2;
-    mergeSort(array, left, middle);
-    mergeSort(array, middle+1, right);
-    merge(array, left, middle, right)
 }
 
 export const Sort = () => {    
@@ -90,9 +75,11 @@ export const Sort = () => {
                             swap(array, j, j+1)
                         }else{
                             array[j].colour = c;
+                            setParameters({paramArr:array});
                         }
                         if(j === array.length-i-2){
                             array[j+1].colour = "pink";
+                            setParameters({paramArr:array});
                         }
                         if(i === array.length-2){
                             array[0].colour = "pink";
@@ -152,7 +139,80 @@ export const Sort = () => {
 
     const triggerMergeSort = (array) => {
         console.log("merge");
-        mergeSort(array, 0, array.length-1);
+        if(visibility){
+            mergeSort(array, 0, array.length-1);            
+        }               
+    }
+
+    const mergeSort = (array, left, right) => {
+        // let c = array[0].colour;
+        if(left>=right){
+            return;
+        }
+        let middle = Math.round((left+(right-1))/2);
+
+        mergeSort(array, left, middle);
+        mergeSort(array, middle+1, right);
+        merge(array, left, middle, right);
+        // setParameters({paramArr: array});
+    }
+
+    const merge = (array, left, middle, right) => {
+        let leftLength = middle-left+1;
+        let rightLength = right-middle;
+        let leftArr = [];
+        let rightArr = [];
+    
+        let leftIndex = 0;
+        let rightIndex = 0;
+        let mergedIndex = left;
+        setTimeout(() =>{
+            // setTimeout(() => {
+                for(let i = 0; i < leftLength; ++i){
+                    leftArr.push(array[left+i]);
+                    setParameters({paramArr: array});
+                }
+            
+                for(let i = 0; i < rightLength; ++i){
+                    rightArr.push(array[middle+1+i]);
+                    setParameters({paramArr: array});
+                }
+            // })
+            
+            // setTimeout(() => {
+                while(leftIndex < leftLength && rightIndex < rightLength){
+                    if(leftArr[leftIndex].value <= rightArr[rightIndex].value){
+                        array[mergedIndex] = leftArr[leftIndex];
+                        leftIndex++;
+                        setParameters({paramArr: array});
+                    }else{
+                        array[mergedIndex] = rightArr[rightIndex];
+                        rightIndex++;
+                        setParameters({paramArr: array});
+                    }
+                    mergedIndex++;
+                }
+            // })
+            
+            // setTimeout(() => {
+                while(leftIndex < leftLength){
+                    array[mergedIndex] = leftArr[leftIndex];
+                    leftIndex++;
+                    mergedIndex++;
+                    setParameters({paramArr: array});
+                }
+            // })
+            
+            // setTimeout(() => {
+                while(rightIndex < rightLength){
+                    array[mergedIndex] = rightArr[rightIndex];
+                    rightIndex++;
+                    mergedIndex++;
+                    setParameters({paramArr: array});
+                }
+            // })
+            setParameters({paramArr: array});
+        })       
     }
 
     const quickSort = (array) => {
@@ -176,7 +236,7 @@ export const Sort = () => {
                 Selection
             </Button>
 
-            <Button variant="outlined" onClick={() => triggerMergeSort(array)} >
+            <Button variant="outlined" onClick={() => triggerMergeSort(arr)} >
                 Merge
             </Button>
 
