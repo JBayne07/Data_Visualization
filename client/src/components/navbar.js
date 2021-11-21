@@ -32,7 +32,11 @@ export const Navbar = () => {
                     Sorting
                   </Link>
               </Button>
-              <Button color="inherit">Graph</Button>
+              <Button variant="contained" color="inherit">
+                <Link to='/graph' className='GraphPage' color="inherit">
+                  Graph
+                </Link>
+              </Button>
             </Toolbar>
           </AppBar>
         </Box>
