@@ -2,7 +2,7 @@ import { BarContainer } from "./barContainer";
 import { Button, Slider, Box } from "@mui/material";
 import './sort.css'
 import { useEffect, useState } from "react";
-// let testArray = [38, 27, 43, 3, 9, 82, 10]
+// let testArr = [38, 27, 43, 3, 9, 82, 10]
 let totalArr = [];
 let arr = [];
 let shuffledArr = [];
@@ -64,29 +64,28 @@ export const Sort = () => {
         
     }
 
-    const bubbleSort = (array) => {
+    const bubbleSort = async (array) => {
         console.log("bubble");
         let c = array[0].colour;
         if(visibility){
             for(let i = 0; i < array.length; ++i){
-                for(let j = 0; j < array.length-i-1; ++j){                    
-                    setTimeout(() => {
-                        if(array[j].value > array[j+1].value){
-                            swap(array, j, j+1)
-                        }else{
-                            array[j].colour = c;
-                            setParameters({paramArr:array});
-                        }
-                        if(j === array.length-i-2){
-                            array[j+1].colour = "pink";
-                            setParameters({paramArr:array});
-                        }
-                        if(i === array.length-2){
-                            array[0].colour = "pink";
-                            setParameters({paramArr:array});
-                        }
-                        setParameters({paramArr:array})                        
-                    }, 1)
+                for(let j = 0; j < array.length-i-1; ++j){
+                    await new Promise(resolve => setTimeout(resolve));
+                    if(array[j].value > array[j+1].value){
+                        swap(array, j, j+1)
+                    }else{
+                        array[j].colour = c;
+                        setParameters({paramArr:array});
+                    }
+                    if(j === array.length-i-2){
+                        array[j+1].colour = "pink";
+                        setParameters({paramArr:array});
+                    }
+                    if(i === array.length-2){
+                        array[0].colour = "pink";
+                        setParameters({paramArr:array});
+                    }
+                    setParameters({paramArr:array})
                 }                
             }            
         }
@@ -99,7 +98,7 @@ export const Sort = () => {
         if(visibility){            
             for(let i = 0; i < array.length-1; ++i){
                 for(let j = i+1; j < array.length; ++j){                                       
-                    await new Promise(resolve => setTimeout((resolve)));
+                    await new Promise(resolve => setTimeout(resolve));
                         if(j === i+1){
                             // eslint-disable-next-line
                             minIndex = i;
@@ -174,23 +173,23 @@ export const Sort = () => {
         let rightIndex = 0;
         let mergedIndex = left;
         let colourLength = 0;
-        // await new Promise(resolve => setTimeout((resolve)));
+
         for(let i = 0; i < leftLength; ++i){
-            await new Promise(resolve => setTimeout((resolve)));
+            await new Promise(resolve => setTimeout(resolve));
             leftArr.push(array[left+i]);
             array[left+i].colour = "grey";
             setParameters({paramArr: array});
         }
     
         for(let i = 0; i < rightLength; ++i){
-            await new Promise(resolve => setTimeout((resolve)));
+            await new Promise(resolve => setTimeout(resolve));
             rightArr.push(array[middle+1+i]);
             array[left+i].colour = "blue";
             setParameters({paramArr: array});
         }
     
         while(leftIndex < leftLength && rightIndex < rightLength){
-            await new Promise(resolve => setTimeout((resolve)));
+            await new Promise(resolve => setTimeout(resolve));
             array[mergedIndex].colour = "black"
             if(leftArr[leftIndex].value <= rightArr[rightIndex].value){
                 array[mergedIndex] = leftArr[leftIndex];
@@ -205,7 +204,7 @@ export const Sort = () => {
         }
 
         while(leftIndex < leftLength){
-            await new Promise(resolve => setTimeout((resolve)));
+            await new Promise(resolve => setTimeout(resolve));
             array[mergedIndex].colour = "black"
             array[mergedIndex] = leftArr[leftIndex];            
             leftIndex++;
@@ -215,7 +214,7 @@ export const Sort = () => {
         }
 
         while(rightIndex < rightLength){
-            await new Promise(resolve => setTimeout((resolve)));
+            await new Promise(resolve => setTimeout(resolve));
             array[mergedIndex].colour = "black"
             array[mergedIndex] = rightArr[rightIndex];            
             rightIndex++;
@@ -225,14 +224,51 @@ export const Sort = () => {
         }
 
         for(let i = left; i < colourLength; ++i){
-            array[i].colour = "black";
+            array[i].colour = "pink";
         }
         setParameters({paramArr:array});
 
     }
 
-    const quickSort = (array) => {
+    const triggerQuickSort = async (array) => {
         console.log("quick");
+        await quickSort(array, 0, array.length-1);
+    }
+
+    const quickSort = async (array, first, last) => {
+        if(first < last){
+            const pivotIndex = await partition(array, first, last);
+            await quickSort(array, first, pivotIndex-1);
+            await quickSort(array, pivotIndex+1, last);
+        }
+        if(first === 0 && last === array.length-1){
+            array[last].colour = "pink";
+            setParameters({paramArr: array});
+        }
+    }
+
+    const partition = async (array, first, last) => {
+        const pivot = array[last].value;
+        let index = first - 1;
+
+        for(let i = first; i <= last-1; ++i){
+            await new Promise(resolve => setTimeout(resolve));
+            if(array[i].value < pivot){
+                index++;
+                const temp = array[index];
+                array[index] = array[i];
+                array[i] = temp;
+                array[index].colour = "pink";
+                setParameters({paramArr: array});
+            }
+        }
+        await new Promise(resolve => setTimeout(resolve));
+        const temp = array[index + 1];
+        array[index + 1] = array[last];
+        array[index + 1].colour = "pink";
+        array[last] = temp;
+        setParameters({paramArr: array});
+        return (index + 1);
     }
 
     return(
@@ -241,7 +277,9 @@ export const Sort = () => {
             
             <br/>
             <Box width="300px">
-                <Slider defaultValue={50}  aria-label="Small" valueLabelDisplay="auto" onChange={changeSize}></Slider>
+                <Slider defaultValue={50}  aria-label="Small" valueLabelDisplay="auto" onChange={changeSize}>
+                    Data Size
+                </Slider>
             </Box>
 
             <Button variant="outlined" onClick={() => bubbleSort(arr)} >
@@ -256,7 +294,7 @@ export const Sort = () => {
                 Merge
             </Button>
 
-            <Button variant="outlined" onClick={() => quickSort(arr)} >
+            <Button variant="outlined" onClick={() => triggerQuickSort(arr)} >
                 Quick
             </Button>
 
@@ -270,6 +308,7 @@ export const Sort = () => {
 
             <br/>
             <br/>
+            
             {visibility ? <BarContainer parameters={parameters}/> : null}
 
         </div>
