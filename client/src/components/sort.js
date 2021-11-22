@@ -92,14 +92,14 @@ export const Sort = () => {
         }
     }
 
-    const selectionSort = (array) => {
+    const selectionSort = async (array) => {
         console.log("selection");
         let minIndex = 0
         let c = array[0].colour;
         if(visibility){            
             for(let i = 0; i < array.length-1; ++i){
                 for(let j = i+1; j < array.length; ++j){                                       
-                    setTimeout(() => {                        
+                    await new Promise(resolve => setTimeout((resolve)));
                         if(j === i+1){
                             // eslint-disable-next-line
                             minIndex = i;
@@ -131,8 +131,8 @@ export const Sort = () => {
                         }else{
                             array[i].colour = "green";
                         }
-                    }, 10)
-                }                          
+                    }
+                                          
             }
         }        
     }
@@ -144,20 +144,27 @@ export const Sort = () => {
         }               
     }
 
-    const mergeSort = (array, left, right) => {
+    const mergeSort = async (array, left, right) => {
         // let c = array[0].colour;
         if(left>=right){
             return;
         }
         let middle = Math.round((left+(right-1))/2);
 
-        mergeSort(array, left, middle);
-        mergeSort(array, middle+1, right);
-        merge(array, left, middle, right);
-        // setParameters({paramArr: array});
+        await mergeSort(array, left, middle);
+        await mergeSort(array, middle+1, right);
+        await merge(array, left, middle, right);
+
+        if((right - left) === array.length-1){
+            for(let i = 0; i < array.length; ++i){
+                array[i].colour = "pink"
+            }
+            setParameters({paramArr:array});
+        }
+        
     }
 
-    const merge = (array, left, middle, right) => {
+    const merge = async (array, left, middle, right) => {
         let leftLength = middle-left+1;
         let rightLength = right-middle;
         let leftArr = [];
@@ -166,53 +173,62 @@ export const Sort = () => {
         let leftIndex = 0;
         let rightIndex = 0;
         let mergedIndex = left;
-        setTimeout(() =>{
-            // setTimeout(() => {
-                for(let i = 0; i < leftLength; ++i){
-                    leftArr.push(array[left+i]);
-                    setParameters({paramArr: array});
-                }
-            
-                for(let i = 0; i < rightLength; ++i){
-                    rightArr.push(array[middle+1+i]);
-                    setParameters({paramArr: array});
-                }
-            // })
-            
-            // setTimeout(() => {
-                while(leftIndex < leftLength && rightIndex < rightLength){
-                    if(leftArr[leftIndex].value <= rightArr[rightIndex].value){
-                        array[mergedIndex] = leftArr[leftIndex];
-                        leftIndex++;
-                        setParameters({paramArr: array});
-                    }else{
-                        array[mergedIndex] = rightArr[rightIndex];
-                        rightIndex++;
-                        setParameters({paramArr: array});
-                    }
-                    mergedIndex++;
-                }
-            // })
-            
-            // setTimeout(() => {
-                while(leftIndex < leftLength){
-                    array[mergedIndex] = leftArr[leftIndex];
-                    leftIndex++;
-                    mergedIndex++;
-                    setParameters({paramArr: array});
-                }
-            // })
-            
-            // setTimeout(() => {
-                while(rightIndex < rightLength){
-                    array[mergedIndex] = rightArr[rightIndex];
-                    rightIndex++;
-                    mergedIndex++;
-                    setParameters({paramArr: array});
-                }
-            // })
+        let colourLength = 0;
+        // await new Promise(resolve => setTimeout((resolve)));
+        for(let i = 0; i < leftLength; ++i){
+            await new Promise(resolve => setTimeout((resolve)));
+            leftArr.push(array[left+i]);
+            array[left+i].colour = "grey";
             setParameters({paramArr: array});
-        })       
+        }
+    
+        for(let i = 0; i < rightLength; ++i){
+            await new Promise(resolve => setTimeout((resolve)));
+            rightArr.push(array[middle+1+i]);
+            array[left+i].colour = "blue";
+            setParameters({paramArr: array});
+        }
+    
+        while(leftIndex < leftLength && rightIndex < rightLength){
+            await new Promise(resolve => setTimeout((resolve)));
+            array[mergedIndex].colour = "black"
+            if(leftArr[leftIndex].value <= rightArr[rightIndex].value){
+                array[mergedIndex] = leftArr[leftIndex];
+                leftIndex++;
+            }else{
+                array[mergedIndex] = rightArr[rightIndex];                
+                rightIndex++;
+            }                        
+            setParameters({paramArr: array});
+            mergedIndex++;
+            colourLength++;
+        }
+
+        while(leftIndex < leftLength){
+            await new Promise(resolve => setTimeout((resolve)));
+            array[mergedIndex].colour = "black"
+            array[mergedIndex] = leftArr[leftIndex];            
+            leftIndex++;
+            mergedIndex++;
+            colourLength++;
+            setParameters({paramArr: array});
+        }
+
+        while(rightIndex < rightLength){
+            await new Promise(resolve => setTimeout((resolve)));
+            array[mergedIndex].colour = "black"
+            array[mergedIndex] = rightArr[rightIndex];            
+            rightIndex++;
+            mergedIndex++;
+            colourLength++;
+            setParameters({paramArr: array});
+        }
+
+        for(let i = left; i < colourLength; ++i){
+            array[i].colour = "black";
+        }
+        setParameters({paramArr:array});
+
     }
 
     const quickSort = (array) => {
