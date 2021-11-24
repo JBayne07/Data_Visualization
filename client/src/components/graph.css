@@ -1,9 +1,9 @@
-.sort{
+.graph{
     margin-left: 20px;
     margin-right: 20px;
 }
 
-#sortBarContainer{
+#graphBoxContainer{
     display: flex;
     justify-content: center;
 }

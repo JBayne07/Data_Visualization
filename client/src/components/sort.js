@@ -99,13 +99,17 @@ export const Sort = () => {
             for(let i = 0; i < array.length-1; ++i){
                 for(let j = i+1; j < array.length; ++j){                                       
                     await new Promise(resolve => setTimeout(resolve));
+                        // array[j].colour = "grey";
+                        // if(j > 1){
+                        //     await new Promise(resolve => setTimeout(resolve));
+                        //     array[j-1].colour = c;
+                        // }
+                        
                         if(j === i+1){
-                            // eslint-disable-next-line
                             minIndex = i;
                         }
                         if(array[j].value < array[minIndex].value){
                             array[minIndex].colour = c;
-                            // eslint-disable-next-line
                             minIndex = j;
                             array[minIndex].colour = "blue";
                             setParameters({paramArr:array});
@@ -126,7 +130,7 @@ export const Sort = () => {
                             if(i === array.length-2){
                                 array[i+1].colour = "pink";
                                 setParameters({paramArr:array});
-                            }                                                      
+                            }
                         }else{
                             array[i].colour = "green";
                         }
@@ -184,7 +188,7 @@ export const Sort = () => {
         for(let i = 0; i < rightLength; ++i){
             await new Promise(resolve => setTimeout(resolve));
             rightArr.push(array[middle+1+i]);
-            array[left+i].colour = "blue";
+            array[middle+1+i].colour = "blue";
             setParameters({paramArr: array});
         }
     
@@ -272,45 +276,47 @@ export const Sort = () => {
     }
 
     return(
+        <>
+            <div className='sort' >
+                
+                <br/>
+                <Box width="300px">
+                    <Slider defaultValue={50}  aria-label="Small" valueLabelDisplay="auto" onChange={changeSize}>
+                        Data Size
+                    </Slider>
+                </Box>
 
-        <div className='sort' >
-            
-            <br/>
-            <Box width="300px">
-                <Slider defaultValue={50}  aria-label="Small" valueLabelDisplay="auto" onChange={changeSize}>
-                    Data Size
-                </Slider>
-            </Box>
+                <Button variant="outlined" onClick={() => bubbleSort(arr)} >
+                    Bubble
+                </Button>
 
-            <Button variant="outlined" onClick={() => bubbleSort(arr)} >
-                Bubble
-            </Button>
+                <Button variant="outlined" onClick={() => selectionSort(arr)} >
+                    Selection
+                </Button>
 
-            <Button variant="outlined" onClick={() => selectionSort(arr)} >
-                Selection
-            </Button>
+                <Button variant="outlined" onClick={() => triggerMergeSort(arr)} >
+                    Merge
+                </Button>
 
-            <Button variant="outlined" onClick={() => triggerMergeSort(arr)} >
-                Merge
-            </Button>
+                <Button variant="outlined" onClick={() => triggerQuickSort(arr)} >
+                    Quick
+                </Button>
 
-            <Button variant="outlined" onClick={() => triggerQuickSort(arr)} >
-                Quick
-            </Button>
+                <Button variant="outlined" onClick={() => showData(totalArr)} >
+                    Show Data
+                </Button>
 
-            <Button variant="outlined" onClick={() => showData(totalArr)} >
-                Show Data
-            </Button>
-
-            <Button variant="outlined" onClick={hideData} >
-                Hide Data
-            </Button>
-
-            <br/>
-            <br/>
-            
-            {visibility ? <BarContainer parameters={parameters}/> : null}
-
-        </div>
+                <Button variant="outlined" onClick={hideData} >
+                    Hide Data
+                </Button>
+                
+                <br/>
+                <br/>
+            </div>
+            <div id='sortBarContainer'>
+                {visibility ? <BarContainer parameters={parameters}/> : null}
+            </div>
+        </>
+        
     );    
 }

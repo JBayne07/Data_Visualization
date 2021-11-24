@@ -1,0 +1,6 @@
+.boxRow{
+    display:flex;
+}
+.wall{
+    background-color: rgb(109, 46, 46);
+}
