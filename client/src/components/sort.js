@@ -9,6 +9,7 @@ let shuffledArr = [];
 const initialParameters = {paramArr:totalArr};
 
 // Need to add animation to make it look better
+// Add, less sleep time when you have larger data and higher sleep time when you have smaller data
 
 const swap = (array, num1, num2) => {
     let c = array[0].colour;
@@ -275,6 +276,59 @@ export const Sort = () => {
         return (index + 1);
     }
 
+    const triggerHeapSort = async (array) => {
+        console.log("heap");
+        await heapSort(array, array.length);
+    }
+
+    const heapSort = async (array, length) => {
+        for(let i = Math.floor(length/2) - 1; i >= 0; i--) {
+            await heapify(array, length, i);
+        }
+
+        for(let i = length - 1; i > 0; i--) {
+            await new Promise(resolve => setTimeout(resolve));
+            const temp = array[0];
+            array[0] = array[i];
+            array[i] = temp;
+            array[i].colour = "pink";
+            setParameters({paramArr: array});
+            await heapify(array, i, 0);
+        }
+        array[0].colour = "pink";
+        setParameters({paramArr: array});
+    }
+
+    const heapify = async (array, length, i) => {
+        let largest = i;
+        let l = 2*i + 1;
+        let r = 2*i + 2;
+        if (l < length && array[l].value > array[largest].value) {
+            largest = l;
+        }
+
+        if (r < length && array[r].value > array[largest].value) {
+            largest = r;
+        }
+
+        if (largest !== i) {
+            await new Promise(resolve => setTimeout(resolve));
+
+            const temp = array[i];
+            array[i] = array[largest];
+            array[largest] = temp;
+            array[i].colour = "orange";
+            array[largest].colour = "grey";
+            setParameters({paramArr: array});
+            await heapify(arr, length, largest);
+
+            await new Promise(resolve => setTimeout(resolve));
+            array[i].colour = "black";
+            array[largest].colour = "black";
+            setParameters({paramArr: array});            
+        } 
+    }
+
     return(
         <>
             <div className='sort' >
@@ -300,6 +354,10 @@ export const Sort = () => {
 
                 <Button variant="outlined" onClick={() => triggerQuickSort(arr)} >
                     Quick
+                </Button>
+
+                <Button variant="outlined" onClick={() => triggerHeapSort(arr)} >
+                    Heap
                 </Button>
 
                 <Button variant="outlined" onClick={() => showData(totalArr)} >

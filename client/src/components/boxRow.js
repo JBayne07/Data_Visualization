@@ -1,8 +1,10 @@
 import {Box} from '@mui/system'
 import './boxRow.css'
 
-export const BoxRow = ({num}) =>{
-    const array = new Array(49);
+export const BoxRow = ({num, tableWidth}) =>{
+    // const rowLength = Math.floor(windowWidth/39);
+    // console.log(rowLength);
+    const array = new Array(tableWidth);
     for(let i = 0; i < array.length; ++i){
         array[i] = num+'-'+i;
     }

@@ -1,7 +1,8 @@
 import {BoxRow} from './boxRow'
 
-export const BoxContainer = () => {
-    const array = new Array(20);
+export const BoxContainer = ({tableHeight, tableWidth}) => {
+    // const columnHeight = 
+    const array = new Array(tableHeight);
     for(let i = 0; i < array.length; ++i){
         array[i] = i;
     }
@@ -9,7 +10,7 @@ export const BoxContainer = () => {
         <div className='boxContainer'>
             {array.map((element) => {
                 return(                    
-                    <BoxRow num={element}/>
+                    <BoxRow num={element} tableWidth={tableWidth}/>
                 )
             })}
         </div>        
