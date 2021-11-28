@@ -1,6 +1,6 @@
 import {BoxRow} from './boxRow'
 
-export const BoxContainer = ({tableHeight, tableWidth}) => {
+export const BoxContainer = ({tableHeight, tableWidth, matrix, wall}) => {
     // const columnHeight = 
     const array = new Array(tableHeight);
     for(let i = 0; i < array.length; ++i){
@@ -10,7 +10,7 @@ export const BoxContainer = ({tableHeight, tableWidth}) => {
         <div className='boxContainer'>
             {array.map((element) => {
                 return(                    
-                    <BoxRow num={element} tableWidth={tableWidth}/>
+                    <BoxRow num={element} tableHeight={tableHeight} tableWidth={tableWidth} matrix={matrix}/>
                 )
             })}
         </div>        
