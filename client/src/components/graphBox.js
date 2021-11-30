@@ -2,8 +2,6 @@ import './graphBox.css'
 import {Box} from '@mui/system'
 import { useEffect, useState } from "react";
 
-// Find a way to update wall when graph.js generate a random maze
-
 export const GraphBox = ({id, flag}) =>{
     const [wall, setWall] = useState(false);
     let element;
@@ -14,10 +12,8 @@ export const GraphBox = ({id, flag}) =>{
 
     useEffect(() => {
         if(flag){
-            console.log('true hi');
             setWall(true);
         }else{
-            console.log('false hie');
             setWall(false);
         }     
     }, [flag])
