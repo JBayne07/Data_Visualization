@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import { BoxContainer } from "./boxContainer";
 import { useEffect, useState } from "react";
 const initialWindow = {height: window.innerHeight, width: window.innerWidth};
+
 const tableHeight = 20;
 const tableWidth = 49;
 
@@ -19,18 +20,16 @@ const tableWidth = 49;
 // Move starting point (lower priority)
 // Move target point (lower priority)
 
-// array[0][500].push(1);
-
 export const Graph = () => {
     const adjacencyMatrix = new Array();
     const initialMatrix = {paramMatrix:adjacencyMatrix};
-    const [wall, setWall] = useState(false);
+    // const [wall, setWall] = useState(false);
     const [windowDimensions, setWindowDimensions] = useState(initialWindow);
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
     const [visibility, setVisibility] = useState(false);
     
     const nodes = tableHeight*tableWidth;
-    useEffect(async () =>{
+    useEffect(() =>{
         setTimeout(() =>{
             setVisibility(true)
         }, 1000);
@@ -45,7 +44,7 @@ export const Graph = () => {
             updateMatrix({paramMatrix:adjacencyMatrix});
         }
         // console.log(adjacencyMatrix);
-        await new Promise(resolve => setTimeout(resolve), 500);
+        // await new Promise(resolve => setTimeout(resolve), 500);
         //This algorithm needs work adds extra length to the matrix
         //uncomment and the length for element 979 will be <1030 this algorithm makes it 1030
 
@@ -96,6 +95,7 @@ export const Graph = () => {
         
         for(let i = 0; i < nodes; ++i){
             adjacencyMatrix[i].push(i);
+            adjacencyMatrix[i].flag = false;
         }
         // for(let i = 0; i < tableHeight; ++i){
         //     for(let j = 0; j < tableWidth; ++j){
@@ -134,15 +134,17 @@ export const Graph = () => {
     console.log(windowDimensions.height, windowDimensions.width);
 
     const generateRandomMaze = () =>{
-
-        for(let i = 0; i < Math.ceil(Math.random()*(700 - 500) + 500); ++i){
+        console.log('generate random maze');
+        const temp = paramMatrix.paramMatrix;
+        for(let i = 0; i < Math.ceil(Math.random()*/* (500 - 300) +  */400+400); ++i){
             const num1 = Math.round(Math.random()*(nodes-1));
             // const idString = num1;
             // adjacencyMatrix[num1][num2] = 0;
             // console.log(num1)
-            console.log(adjacencyMatrix);
-            console.log(adjacencyMatrix[0]);
-            adjacencyMatrix[num1].push(true);
+            // console.log('random maze', paramMatrix.paramMatrix);
+            // console.log(paramMatrix);
+            temp[num1].flag = true;
+            updateMatrix({paramMatrix:temp});
             const element = document.getElementById(num1);            
             element.className='MuiBox-root css-1rqr9y6 wall';
         }

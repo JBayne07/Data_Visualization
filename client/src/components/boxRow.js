@@ -39,9 +39,10 @@ export const BoxRow = ({num, tableHeight, tableWidth, matrix}) =>{
                 // }else{
                 //     console.log('boxrow === 980', matrix.paramMatrix[element][tableWidth*tableHeight]);
                 // }
-                
+                // console.log('before flag: ', element, matrix.paramMatrix[element]);
+                // console.log('flag:',matrix.paramMatrix[element].flag);
                 return(                    
-                    <GraphBox id={element} flag={matrix.paramMatrix[element][tableWidth*tableHeight+1]}/>
+                    <GraphBox id={element} flag={matrix.paramMatrix[element].flag}/>
                 )
             })}
         </div>

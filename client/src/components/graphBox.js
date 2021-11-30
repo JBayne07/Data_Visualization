@@ -12,13 +12,15 @@ export const GraphBox = ({id, flag}) =>{
         
     }, 1000)
 
-    useEffect(async () => {
+    useEffect(() => {
         if(flag){
-            await setWall(true);
+            console.log('true hi');
+            setWall(true);
         }else{
-            await setWall(false);
+            console.log('false hie');
+            setWall(false);
         }     
-    }, flag)
+    }, [flag])
 
     
     const changeWall = async () =>{
