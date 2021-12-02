@@ -1,13 +1,14 @@
 import '../components/graph.css'
 import { Button } from "@mui/material";
 import { BoxContainer } from "./boxContainer";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 
 const tableHeight = 20;
 const tableWidth = 49;
+const randomSize = 400;
 
-// Create a datastructure for the maze
+// Create a datastructure for the maze - done
 // Set up a random start point - done
 // Set up a random target point - done
 // Create BFS
@@ -23,6 +24,7 @@ const tableWidth = 49;
 export const Graph = () => {
     const adjacencyMatrix = [];
     const initialMatrix = {paramMatrix:adjacencyMatrix};
+    const [childData, setChildData] = useState();
     // const [wall, setWall] = useState(false);
     const [windowDimensions, setWindowDimensions] = useState(initialWindow);
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
@@ -48,9 +50,9 @@ export const Graph = () => {
         //This algorithm needs work adds extra length to the matrix
         //uncomment and the length for element 979 will make it 1030
 
-        for(let i = 0; i < nodes; ++i){            
+        for(let i = 0; i < nodes; ++i){
             for (let j = 0; j < nodes; ++j){                
-                if( i>= 0 && i <= tableWidth-1){
+                if( i>= 0 && i <= tableWidth-1){ // Top Row Check
                     if(i === 0){
                         adjacencyMatrix[i][i + 1] = 1;
                     }else if (i === tableWidth - 1) {
@@ -61,7 +63,7 @@ export const Graph = () => {
                     }
                     adjacencyMatrix[i][i + tableWidth] = 1;
                 }
-                if(i >= nodes-tableWidth && i <= nodes-1){
+                if(i >= nodes-tableWidth && i <= nodes-1){ //Bottom row check
                     if(i === nodes - tableWidth){
                         adjacencyMatrix[i][i + 1] = 1;
                     }else if(i === nodes -1){
@@ -72,7 +74,7 @@ export const Graph = () => {
                     }
                     adjacencyMatrix[i][i - tableWidth] = 1;
                 }
-                if(0 === i % tableWidth){
+                if(0 === i % tableWidth){ //Left column check
                     if (i === 0) {
                         adjacencyMatrix[i][i + tableWidth] = 1;
                     } else if (i === nodes - tableWidth) {
@@ -83,7 +85,7 @@ export const Graph = () => {
                     }
                     adjacencyMatrix[i][i + 1] = 1;
                 }
-                if(48 === i % tableWidth){
+                if(48 === i % tableWidth){ //Right column check
                     if(i === tableWidth-1){
                         adjacencyMatrix[i][i + tableWidth] = 1;
                     }else if(i === nodes-1){
@@ -94,7 +96,7 @@ export const Graph = () => {
                     }                    
                     adjacencyMatrix[i][i-1] = 1;
                 }
-                if(!( (i>= 0 && i <= tableWidth-1) || (i >= nodes-tableWidth && i <= nodes-1) || (0 === i % tableWidth) || (48 === i % tableWidth))){
+                if(!( (i>= 0 && i <= tableWidth-1) || (i >= nodes-tableWidth && i <= nodes-1) || (0 === i % tableWidth) || (48 === i % tableWidth))){ //The rest of the nodes
                     adjacencyMatrix[i][i + tableWidth] = 1;
                     adjacencyMatrix[i][i - tableWidth] = 1;
                     adjacencyMatrix[i][i + 1] = 1;
@@ -102,7 +104,7 @@ export const Graph = () => {
                 }
             }
         }
-        
+        //Add id and flag at the end
         for(let i = 0; i < nodes; ++i){
             adjacencyMatrix[i].push(i);
             adjacencyMatrix[i].flag = false;
@@ -110,6 +112,12 @@ export const Graph = () => {
         console.log(adjacencyMatrix);
         updateMatrix({paramMatrix:adjacencyMatrix});
     }, [])
+
+    useEffect(() => {
+        if(childData !== undefined){
+            updateMatrix({paramMatrix:childData});
+        }
+    }, [childData])
 
     // Handles whenever the window resizes
     useEffect(() => {
@@ -121,76 +129,76 @@ export const Graph = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
-    })
+    });
 
     console.log(windowDimensions.height, windowDimensions.width);
-    // temp[num1-tableWidth][num1] = 0;
-    // temp[num1-1][num1] = 0;
-    //Why does adjacency matrix become undefined in this function???
-    //Need to update this algorithm to update the matrix correctly
+
     const generateRandomMaze = () =>{
         console.log('generate random maze');
         const temp = paramMatrix.paramMatrix;
-        for(let i = 0; i < Math.ceil(Math.random()*/* (500 - 300) +  */400+400); ++i){
-            const num1 = Math.round(Math.random()*(nodes-1));
-            console.log(temp);
-            if( num1>= 0 && num1 <= tableWidth-1){
-                if(num1 === 0){
-                    temp[num1+1][num1] = 0; 
-                    temp[num1+tableWidth][num1] = 0;
-                }else if (i === tableWidth - 1) {
-                    temp[num1-1][num1] = 0;
-                    temp[num1+tableWidth][num1] = 0;
+        for(let i = 0; i < Math.ceil(Math.random()*randomSize+randomSize); ++i){
+            const num = Math.round(Math.random()*(nodes-1));
+            if( num >= 0 && num <= tableWidth-1){
+                if(num === 0){
+                    temp[num+1][num] = 0; 
+                    temp[num+tableWidth][num] = 0;
+                }else if (num === tableWidth - 1) {
+                    temp[num-1][num] = 0;
+                    temp[num+tableWidth][num] = 0;
                 }else {
-                    temp[num1-1][num1] = 0;
-                    temp[num1+1][num1] = 0;
-                    temp[num1+tableWidth][num1] = 0;
+                    temp[num-1][num] = 0;
+                    temp[num+1][num] = 0;
+                    temp[num+tableWidth][num] = 0;
                 }
             }
-        //         adjacencyMatrix[i][i + tableWidth] = 1;
-        //     if(num1 >= nodes-tableWidth && num1 <= nodes-1){
-        //         if(i === nodes - tableWidth){
-        //             adjacencyMatrix[i][i + 1] = 1;
-        //         }else if(i === nodes -1){
-        //             adjacencyMatrix[i][i - 1] = 1
-        //         }else{
-        //             adjacencyMatrix[i][i + 1] = 1;
-        //             adjacencyMatrix[i][i - 1] = 1;
-        //         }
-        //         adjacencyMatrix[i][i - tableWidth] = 1;
-        //     }
-        //     if(0 === num1 % tableWidth){
-        //         if (i === 0) {
-        //             adjacencyMatrix[i][i + tableWidth] = 1;
-        //         } else if (i === nodes - tableWidth) {
-        //             adjacencyMatrix[i][i - tableWidth] = 1;
-        //         } else {
-        //             adjacencyMatrix[i][i - tableWidth] = 1;
-        //             adjacencyMatrix[i][i + tableWidth] = 1;
-        //         }
-        //         adjacencyMatrix[i][i + 1] = 1;
-        //     }
-        //     if(48 === num1 % tableWidth){
-        //         if(i === tableWidth-1){
-        //             adjacencyMatrix[i][i + tableWidth] = 1;
-        //         }else if(i === nodes-1){
-        //             adjacencyMatrix[i][i - tableWidth] = 1;
-        //         }else{
-        //             adjacencyMatrix[i][i - tableWidth] = 1;
-        //             adjacencyMatrix[i][i + tableWidth] = 1;
-        //         }                    
-        //         adjacencyMatrix[i][i-1] = 1;
-        //     }
-        //     if(!( (num1>= 0 && num1 <= tableWidth-1) || (num1 >= nodes-tableWidth && num1 <= nodes-1) || (0 === num1 % tableWidth) || (48 === num1 % tableWidth))){
-        //         adjacencyMatrix[i][i + tableWidth] = 1;
-        //         adjacencyMatrix[i][i - tableWidth] = 1;
-        //         adjacencyMatrix[i][i + 1] = 1;
-        //         adjacencyMatrix[i][i-1] = 1;
-        //     }
-            temp[num1].flag = true;
-            // console.log('after generate',temp);
+            if(num >= nodes-tableWidth && num <= nodes-1){
+                if(num === nodes - tableWidth){
+                    temp[num+1][num] = 0;
+                    temp[num-tableWidth][num] = 0;
+                }else if(num === nodes-1){
+                    temp[num-1][num] = 0;
+                    temp[num-tableWidth][num] = 0;
+                }else{
+                    temp[num-1][num] = 0;
+                    temp[num+1][num] = 0;
+                    temp[num-tableWidth][num] = 0;
+                }
+            }
+            if(0 === num % tableWidth){
+                if(num === 0){
+                    temp[num+1][num] = 0;
+                    temp[num + tableWidth][num] = 0;
+                }else if(num === nodes - tableWidth){
+                    temp[num+1][num] = 0;
+                    temp[num - tableWidth][num] = 0;
+                }else{                    
+                    temp[num+1][num] = 0;
+                    temp[num + tableWidth][num] = 0;
+                    temp[num - tableWidth][num] = 0;
+                }
+            }
+            if(48 === num % tableWidth){
+                if(num === tableWidth-1){
+                    temp[num-1][num] = 0;
+                    temp[num+tableWidth][num] = 0;
+                }else if(num === nodes-1){
+                    temp[num-1][num] = 0;
+                    temp[num-tableWidth][num] = 0;
+                }else{
+                    temp[num-1][num] = 0;
+                    temp[num+tableWidth][num] = 0;
+                    temp[num-tableWidth][num] = 0;
+                }
+            }
+            if(!( (num>= 0 && num <= tableWidth-1) || (num >= nodes-tableWidth && num <= nodes-1) || (0 === num % tableWidth) || (48 === num % tableWidth))){
+                temp[num+1][num] = 0;
+                temp[num-1][num] = 0;
+                temp[num+tableWidth][num] = 0;
+                temp[num-tableWidth][num] = 0;
+            }
+            temp[num].flag = true;
             updateMatrix({paramMatrix:temp});
-            const element = document.getElementById(num1);            
+            const element = document.getElementById(num);
             element.className='MuiBox-root css-1rqr9y6 wall';
         }
     }
@@ -198,8 +206,8 @@ export const Graph = () => {
     const generateStartingPoint = () => {
         let index = 0;
         while(index < nodes-1){
-            const num1 = Math.round(Math.random()*(nodes-1));
-            const element = document.getElementById(num1);
+            const num = Math.round(Math.random()*(nodes-1));
+            const element = document.getElementById(num);
             if(element.className !== 'MuiBox-root css-1rqr9y6 wall'){
                 element.className='MuiBox-root css-1rqr9y6 starting';
                 return;
@@ -211,8 +219,8 @@ export const Graph = () => {
     const generateTarget = () => {
         let index = 0;
         while(index < nodes-1){
-            const num1 = Math.round(Math.random()*(nodes-1));
-            const element = document.getElementById(num1);
+            const num = Math.round(Math.random()*(nodes-1));
+            const element = document.getElementById(num);
             if(element.className !== 'MuiBox-root css-1rqr9y6 wall'){
                 element.className='MuiBox-root css-1rqr9y6 target';
                 return;
@@ -221,7 +229,11 @@ export const Graph = () => {
         }
     }
 
-    
+    const generateBFS = () => {
+
+    }
+
+
     return(
         <>
             <div className='graph'>
@@ -231,7 +243,10 @@ export const Graph = () => {
                 </Button>
                 <Button variant="outlined" onClick={generateTarget} >
                     Set Target
-                </Button>                
+                </Button>
+                <Button variant="outlined" onClick={generateBFS} >
+                    Breadth First Search
+                </Button> 
                 <Button variant="outlined" >
                     Create Maze
                 </Button>
@@ -242,7 +257,7 @@ export const Graph = () => {
                 <br/>
             </div>
             <div id='graphBoxContainer' >
-            {visibility ? <BoxContainer tableHeight={tableHeight} tableWidth={tableWidth} matrix={paramMatrix}/> : null }
+            {visibility ? <BoxContainer tableHeight={tableHeight} tableWidth={tableWidth} matrix={paramMatrix} passChildData={setChildData}/> : null }
             </div>            
         </>        
     )
