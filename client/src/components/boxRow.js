@@ -13,7 +13,7 @@ export const BoxRow = (props) =>{
 
     useEffect(() => {
         props.passChildData(childData);
-    }, [childData])
+    }, [childData, props])
     
     
     return(

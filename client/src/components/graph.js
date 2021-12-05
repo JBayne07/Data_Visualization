@@ -136,8 +136,13 @@ export const Graph = () => {
     const generateRandomMaze = () =>{
         console.log('generate random maze');
         const temp = paramMatrix.paramMatrix;
+        const startId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting')[0].id);
+        const targetId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')[0].id);
         for(let i = 0; i < Math.ceil(Math.random()*randomSize+randomSize); ++i){
             const num = Math.round(Math.random()*(nodes-1));
+            if(num === startId || num === targetId){
+                continue;
+            }
             if( num >= 0 && num <= tableWidth-1){
                 if(num === 0){
                     temp[num+1][num] = 0; 
@@ -229,10 +234,122 @@ export const Graph = () => {
         }
     }
 
-    const generateBFS = () => {
+    const generateBFS = async () => {
+        const temp = paramMatrix.paramMatrix;
+        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
+        const targetElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')
+        const startId = parseInt(startElement[0].id);
+        const targetId = parseInt(targetElement[0].id);
+        let path = new Array(nodes);
+        let reverse = [];
 
+        await BFS(temp, startId, targetId, path);
+        console.log(path);
+        
+        for(let i = targetId; i != null; i = path[i]){
+            console.log(i);
+            reverse.push(i);
+        }
+        
+        for(let i = 1; i < reverse.length-1; ++i){
+            console.log(i,' ',reverse[i]);
+            await new Promise(resolve => setTimeout(resolve));
+            const tempElement = document.getElementById(reverse[i]);
+            tempElement.className = 'MuiBox-root css-1rqr9y6 path'
+        }
+
+        console.log('done');
     }
 
+    const BFS =  async (matrix, start, target, path) => {
+        
+        const visited = new Array(nodes);
+
+        for(let i = 0; i < visited.length; ++i){
+            visited[i] = false;
+        }
+        for(let i = 0; i < path.length; ++i){
+            path[i] = null;
+        }
+        let q = [];
+        q.push(start);
+
+        visited[start] = true;
+        let vis = 0;
+        let string = '';
+
+        while(!(q.length < 1)){
+            await new Promise(resolve => setTimeout(resolve));
+            vis = q[0];
+            string += vis + ' ';            
+            q = q.slice(1);
+
+            for(let i = 0; i < nodes; ++i){
+                if((matrix[vis][i] === 1) && !(visited[i])){
+                    await new Promise(resolve => setTimeout(resolve));
+                    if(i === target){
+                        path[i] = q[0];
+                        console.log('Found the target');
+                        return;
+                    }
+                    const element = document.getElementById(i);
+                    element.className = 'MuiBox-root css-1rqr9y6 searching';
+                    q.push(i);
+                    path[i] = vis;
+                    visited[i] = true;
+                }
+            }            
+        }
+        console.log(string);
+    }
+
+    const generateDFS = () => {
+        const temp = paramMatrix.paramMatrix;
+        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
+        const targetElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')
+        
+        const startId = parseInt(startElement[0].id);
+        const targetId = parseInt(targetElement[0].id);
+        const visitedArr = new Array(nodes);
+        let string = '';
+        for(let i = 0; i < visitedArr.length; ++i){
+            visitedArr[i] = false;
+        }
+        
+        DFS(temp, startId, targetId, visitedArr, string);
+    }
+
+    const DFS = async (matrix, start, target, visited, string) => {        
+        await new Promise(resolve => setTimeout(resolve));
+        let flag = false
+        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
+        const startId = parseInt(startElement[0].id);
+        if(visited[startId] === false){
+            flag = true;
+        }
+
+        string += start + ' ';
+        visited[start] = true;
+
+        for(let i = 0; i < matrix[start].length-1; ++i){
+            if((matrix[start][i] === 1) && (!visited[i])){
+                await new Promise(resolve => setTimeout(resolve));
+                if(start === target){
+                    console.log('Found the target');
+                    return;
+                }
+                if(!flag){
+                    const element = document.getElementById(start);
+                    element.className = 'MuiBox-root css-1rqr9y6 searching';
+                }
+                await DFS(matrix, i, target, visited, string);
+            }
+        }
+        if(!flag){
+            const element = document.getElementById(start);
+            element.className = 'MuiBox-root css-1rqr9y6 searching';
+        }
+    }
 
     return(
         <>
@@ -246,6 +363,9 @@ export const Graph = () => {
                 </Button>
                 <Button variant="outlined" onClick={generateBFS} >
                     Breadth First Search
+                </Button>
+                <Button variant="outlined" onClick={generateDFS} >
+                    Depth First Search
                 </Button> 
                 <Button variant="outlined" >
                     Create Maze

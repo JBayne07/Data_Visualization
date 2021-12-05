@@ -11,7 +11,7 @@ export const BoxContainer = (props) => {
     }
     useEffect(() => {
         props.passChildData(childData);
-    }, [childData])
+    }, [childData, props])
 
     return(
         <div className='boxContainer'>

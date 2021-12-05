@@ -35,7 +35,6 @@ export const GraphBox = (props) =>{
         const nodes = props.tableWidth * props.tableHeight;
         if(flag){
             element.className = 'MuiBox-root css-1rqr9y6';
-            console.log('no wall');
             if( num >= 0 && num <= tableWidth-1){
                 if(num === 0){
                     temp[num+1][num] = 1;
@@ -95,8 +94,7 @@ export const GraphBox = (props) =>{
                 temp[num-tableWidth][num] = 1;
             }
         }else{
-            element.className = 'MuiBox-root css-1rqr9y6 wall';
-            console.log('wall');            
+            element.className = 'MuiBox-root css-1rqr9y6 wall';          
             if( num >= 0 && num <= tableWidth-1){
                 if(num === 0){
                     temp[num+1][num] = 0; 
