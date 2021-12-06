@@ -44,8 +44,9 @@ export const GraphBox = (props) =>{
         console.log('drag exit', event);
         let element = document.getElementById(event.target.id);
         let originalElement = document.getElementById(event.dataTransfer.getData("id"));
-
-        if(originalElement.className === 'MuiBox-root css-1rqr9y6 starting'){
+        if(originalElement.className === element.className){
+            return;
+        }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 starting'){
             element.className = 'MuiBox-root css-1rqr9y6 starting';
             originalElement.className = 'MuiBox-root css-1rqr9y6'
         }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 target'){

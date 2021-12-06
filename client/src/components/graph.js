@@ -326,12 +326,12 @@ export const Graph = () => {
         await DFS(temp, startId, targetId, visitedArr, string, path);
         console.log(path);
         for(let i = path[targetId]; i !== null ; i = path[i]){
-            console.log(i);
+            // console.log(i);
             reverse.push(i);            
         }
 
         for(let i = reverse.length-1; i > -1; --i){
-            console.log(i);
+            // console.log(i);
             await new Promise(resolve => setTimeout(resolve), 1000);
             const tempElement = document.getElementById(reverse[i]);
             tempElement.className = 'MuiBox-root css-1rqr9y6 path';
@@ -371,12 +371,6 @@ export const Graph = () => {
                 }                
                 await DFS(matrix, i, target, visited, string, path);
             }
-        }
-        if(!flag){
-            console.log(start)
-            const element = document.getElementById(start);
-            // path[start] = start;
-            element.className = 'MuiBox-root css-1rqr9y6 searching';
         }
     }
 
