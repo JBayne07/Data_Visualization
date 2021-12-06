@@ -2,7 +2,6 @@ import {BoxRow} from './boxRow'
 import React, {useEffect, useState} from 'react';
 
 export const BoxContainer = (props) => {
-    // const columnHeight = 
     const [childData, setChildData] = useState();
 
     const array = new Array(props.tableHeight);

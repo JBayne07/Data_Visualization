@@ -7,6 +7,7 @@ const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 const tableHeight = 20;
 const tableWidth = 49;
 const randomSize = 400;
+let stopFlag = false;
 
 // Create a datastructure for the maze - done
 // Set up a random start point - done
@@ -33,15 +34,37 @@ export const Graph = () => {
     const nodes = tableHeight*tableWidth;
     useEffect(() =>{
         setTimeout(() =>{
-            setVisibility(true)
-            let num = (10*tableWidth+10);
-            let element = document.getElementById(num);
-            element.className = 'MuiBox-root css-1rqr9y6 starting';
-            num = (10*tableWidth+40);
-            element = document.getElementById(num);
-            element.className = 'MuiBox-root css-1rqr9y6 target';
+            setVisibility(true);
+            showMarkers();
         }, 1000);
 
+        generateMaze();
+        console.log(adjacencyMatrix);
+        updateMatrix({paramMatrix:adjacencyMatrix});
+    }, [])
+
+    //Obtains the matrix from the child components
+    useEffect(() => {
+        if(childData !== undefined){
+            updateMatrix({paramMatrix:childData});
+        }
+    }, [childData])
+
+    // Handles whenever the window resizes
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowDimensions({height: window.innerHeight, width: window.innerWidth})
+        }
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    });
+
+    console.log(windowDimensions.height, windowDimensions.width);
+
+    const generateMaze = () => {
         for(let i = 0; i < nodes; ++i){
             const temp = new Array(nodes);
             
@@ -112,30 +135,26 @@ export const Graph = () => {
             adjacencyMatrix[i].push(i);
             adjacencyMatrix[i].flag = false;
         }
-        console.log(adjacencyMatrix);
-        updateMatrix({paramMatrix:adjacencyMatrix});
-    }, [])
+    }
 
-    //Obtains the matrix from the child components
-    useEffect(() => {
-        if(childData !== undefined){
-            updateMatrix({paramMatrix:childData});
-        }
-    }, [childData])
+    const showMarkers = () => {
+        let num = (10*tableWidth+10);
+        let element = document.getElementById(num);
+        element.className = 'MuiBox-root css-1rqr9y6 starting';
+        num = (10*tableWidth+40);
+        element = document.getElementById(num);
+        element.className = 'MuiBox-root css-1rqr9y6 target';
+    }
 
-    // Handles whenever the window resizes
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowDimensions({height: window.innerHeight, width: window.innerWidth})
-        }
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
-    });
-
-    console.log(windowDimensions.height, windowDimensions.width);
+    const clearMaze = async () =>{
+        console.log('clear maze');
+        stopFlag = false;
+        await generateMaze();
+        await updateMatrix({paramMatrix:adjacencyMatrix});
+        await setVisibility(false);
+        await setVisibility(true);
+        await showMarkers();        
+    }
 
     const generateRandomMaze = () =>{
         console.log('generate random maze');
@@ -221,17 +240,21 @@ export const Graph = () => {
         let path = new Array(nodes);
         let reverse = [];
 
+        for(let i = 0; i < path.length; ++i){
+            path[i] = null;
+        }
+
         await BFS(temp, startId, targetId, path);
         console.log(path);
         
-        for(let i = targetId; i != null; i = path[i]){
+        for(let i = targetId; i !== null; i = path[i]){
             console.log(i);
             reverse.push(i);
         }
         
         for(let i = reverse.length-2; i > 0; --i){
             console.log(i,' ',reverse[i]);
-            await new Promise(resolve => setTimeout(resolve), 1000);
+            await new Promise(resolve => setTimeout(resolve));
             const tempElement = document.getElementById(reverse[i]);
             tempElement.className = 'MuiBox-root css-1rqr9y6 path'
         }
@@ -246,9 +269,7 @@ export const Graph = () => {
         for(let i = 0; i < visited.length; ++i){
             visited[i] = false;
         }
-        for(let i = 0; i < path.length; ++i){
-            path[i] = null;
-        }
+        
         let q = [];
         q.push(start);
 
@@ -266,7 +287,7 @@ export const Graph = () => {
                 if((matrix[vis][i] === 1) && !(visited[i])){
                     await new Promise(resolve => setTimeout(resolve));
                     if(i === target){
-                        path[i] = q[0];
+                        path[i] = vis;
                         console.log('Found the target');
                         return;
                     }
@@ -281,7 +302,7 @@ export const Graph = () => {
         console.log(string);
     }
 
-    const generateDFS = () => {
+    const generateDFS = async () => {
         const temp = paramMatrix.paramMatrix;
         const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
         const targetElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')
@@ -289,15 +310,35 @@ export const Graph = () => {
         const startId = parseInt(startElement[0].id);
         const targetId = parseInt(targetElement[0].id);
         const visitedArr = new Array(nodes);
+
         let string = '';
+        let path = new Array(nodes);
+        let reverse = [];
+
+        for(let i = 0; i < path.length; ++i){
+            path[i] = null;
+        }
+
         for(let i = 0; i < visitedArr.length; ++i){
             visitedArr[i] = false;
         }
         
-        DFS(temp, startId, targetId, visitedArr, string);
+        await DFS(temp, startId, targetId, visitedArr, string, path);
+        console.log(path);
+        for(let i = path[targetId]; i !== null ; i = path[i]){
+            console.log(i);
+            reverse.push(i);            
+        }
+
+        for(let i = reverse.length-1; i > -1; --i){
+            console.log(i);
+            await new Promise(resolve => setTimeout(resolve), 1000);
+            const tempElement = document.getElementById(reverse[i]);
+            tempElement.className = 'MuiBox-root css-1rqr9y6 path';
+        }
     }
 
-    const DFS = async (matrix, start, target, visited, string) => {        
+    const DFS = async (matrix, start, target, visited, string, path) => {        
         await new Promise(resolve => setTimeout(resolve));
         let flag = false
         const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
@@ -312,19 +353,29 @@ export const Graph = () => {
         for(let i = 0; i < matrix[start].length-1; ++i){
             if((matrix[start][i] === 1) && (!visited[i])){
                 await new Promise(resolve => setTimeout(resolve));
+                if(stopFlag === true){
+                    return;
+                }
                 if(start === target){
                     console.log('Found the target');
+                    stopFlag = true;
+                    // console.log(start)
+                    path[i] = start;
                     return;
                 }
                 if(!flag){
                     const element = document.getElementById(start);
                     element.className = 'MuiBox-root css-1rqr9y6 searching';
-                }
-                await DFS(matrix, i, target, visited, string);
+                    // console.log(start)
+                    path[i] = start;
+                }                
+                await DFS(matrix, i, target, visited, string, path);
             }
         }
         if(!flag){
+            console.log(start)
             const element = document.getElementById(start);
+            // path[start] = start;
             element.className = 'MuiBox-root css-1rqr9y6 searching';
         }
     }
@@ -333,14 +384,14 @@ export const Graph = () => {
         <>
             <div className='graph'>
                 <br/>
-                
+
                 <Button variant="outlined" onClick={generateBFS} >
                     Breadth First Search
                 </Button>
                 <Button variant="outlined" onClick={generateDFS} >
                     Depth First Search
                 </Button> 
-                <Button variant="outlined" >
+                <Button variant="outlined" onClick={clearMaze} >
                     Clear Maze
                 </Button>
                 <Button variant="outlined" onClick={generateRandomMaze} >
