@@ -9,15 +9,21 @@ export const BoxContainer = (props) => {
     for(let i = 0; i < array.length; ++i){
         array[i] = i;
     }
-    useEffect(() => {
+    useEffect(() => {        
         props.passChildData(childData);
     }, [childData, props])
+
+    const dropBox = event => {
+        event.stopPropogation()
+        event.preventDefault()
+        console.log('dropbox');
+    }
 
     return(
         <div className='boxContainer'>
             {array.map((element) => {
                 return(                    
-                    <BoxRow num={element} tableHeight={props.tableHeight} tableWidth={props.tableWidth} matrix={props.matrix} passChildData={setChildData}/>
+                    <BoxRow num={element} onDrop={dropBox} tableHeight={props.tableHeight} tableWidth={props.tableWidth} matrix={props.matrix} passChildData={setChildData}/>
                 )
             })}
         </div>        

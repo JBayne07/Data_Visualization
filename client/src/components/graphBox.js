@@ -17,15 +17,48 @@ export const GraphBox = (props) =>{
         }
     }, [props.flag])
 
-    const changeWall = async () =>{
+    const changeWall = () =>{
         element = document.getElementById(props.id);
         if(wall){
-            await setClassName(wall, element);
-            await setWall(false);
+            setClassName(wall, element);
+            setWall(false);
         }else{
-            await setClassName(wall, element);
-            await setWall(true);
+            setClassName(wall, element);
+            setWall(true);
         }
+    }
+
+    const dragBox = event => {
+        console.log('drag start', props.id);
+        event.dataTransfer.setData("id", props.id)
+        console.log(event);
+    }
+
+    const dragEndBox = event => {
+        console.log('drag end', props.id);
+    }
+
+    const dropBox = event => {
+        event.stopPropagation();
+        event.preventDefault();
+        console.log('drag exit', event);
+        let element = document.getElementById(event.target.id);
+        let originalElement = document.getElementById(event.dataTransfer.getData("id"));
+
+        if(originalElement.className === 'MuiBox-root css-1rqr9y6 starting'){
+            element.className = 'MuiBox-root css-1rqr9y6 starting';
+            originalElement.className = 'MuiBox-root css-1rqr9y6'
+        }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 target'){
+            element.className = 'MuiBox-root css-1rqr9y6 target';
+            originalElement.className = 'MuiBox-root css-1rqr9y6'
+        }        
+        
+    }
+
+    const dragOverBox = event => {
+        event.stopPropagation();
+        event.preventDefault();
+
     }
 
     const setClassName = (flag, element) => {
@@ -158,6 +191,6 @@ export const GraphBox = (props) =>{
     }
     
     return(
-        <Box id={props.id} onClick={changeWall} sx={{width:5, height:5, p:2, display: 'flex', justifyContent: 'center', border: '1px solid grey'}}/>
+        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragEnd={dragEndBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, display: 'flex', justifyContent: 'center', border: '1px solid grey'}}/>
     )
 }

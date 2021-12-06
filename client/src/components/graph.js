@@ -11,16 +11,16 @@ const randomSize = 400;
 // Create a datastructure for the maze - done
 // Set up a random start point - done
 // Set up a random target point - done
-// Create BFS
-// Create DFS
+// Create BFS - done
+// Create DFS - done
 // Create Dijkstra
 // Create Johnsons
 // Create floyd warshall
 // Create Max Flow
 // onClick wall setup - done
-// Move starting point (lower priority)
-// Move target point (lower priority)
-
+// Move starting point (lower priority) - done
+// Move target point (lower priority) - done
+//Scale the window length and width to the box size
 export const Graph = () => {
     const adjacencyMatrix = [];
     const initialMatrix = {paramMatrix:adjacencyMatrix};
@@ -34,6 +34,12 @@ export const Graph = () => {
     useEffect(() =>{
         setTimeout(() =>{
             setVisibility(true)
+            let num = (10*tableWidth+10);
+            let element = document.getElementById(num);
+            element.className = 'MuiBox-root css-1rqr9y6 starting';
+            num = (10*tableWidth+40);
+            element = document.getElementById(num);
+            element.className = 'MuiBox-root css-1rqr9y6 target';
         }, 1000);
 
         for(let i = 0; i < nodes; ++i){
@@ -44,12 +50,9 @@ export const Graph = () => {
             }
             adjacencyMatrix.push(temp);
             updateMatrix({paramMatrix:adjacencyMatrix});
-        }
-        // console.log(adjacencyMatrix);
-        // await new Promise(resolve => setTimeout(resolve), 500);
-        //This algorithm needs work adds extra length to the matrix
-        //uncomment and the length for element 979 will make it 1030
+        }        
 
+        //Creates all the edges for the maze
         for(let i = 0; i < nodes; ++i){
             for (let j = 0; j < nodes; ++j){                
                 if( i>= 0 && i <= tableWidth-1){ // Top Row Check
@@ -113,6 +116,7 @@ export const Graph = () => {
         updateMatrix({paramMatrix:adjacencyMatrix});
     }, [])
 
+    //Obtains the matrix from the child components
     useEffect(() => {
         if(childData !== undefined){
             updateMatrix({paramMatrix:childData});
@@ -208,32 +212,6 @@ export const Graph = () => {
         }
     }
 
-    const generateStartingPoint = () => {
-        let index = 0;
-        while(index < nodes-1){
-            const num = Math.round(Math.random()*(nodes-1));
-            const element = document.getElementById(num);
-            if(element.className !== 'MuiBox-root css-1rqr9y6 wall'){
-                element.className='MuiBox-root css-1rqr9y6 starting';
-                return;
-            }
-            index++;
-        }
-    }
-
-    const generateTarget = () => {
-        let index = 0;
-        while(index < nodes-1){
-            const num = Math.round(Math.random()*(nodes-1));
-            const element = document.getElementById(num);
-            if(element.className !== 'MuiBox-root css-1rqr9y6 wall'){
-                element.className='MuiBox-root css-1rqr9y6 target';
-                return;
-            }
-            index++;
-        }
-    }
-
     const generateBFS = async () => {
         const temp = paramMatrix.paramMatrix;
         const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
@@ -251,9 +229,9 @@ export const Graph = () => {
             reverse.push(i);
         }
         
-        for(let i = 1; i < reverse.length-1; ++i){
+        for(let i = reverse.length-2; i > 0; --i){
             console.log(i,' ',reverse[i]);
-            await new Promise(resolve => setTimeout(resolve));
+            await new Promise(resolve => setTimeout(resolve), 1000);
             const tempElement = document.getElementById(reverse[i]);
             tempElement.className = 'MuiBox-root css-1rqr9y6 path'
         }
@@ -355,12 +333,7 @@ export const Graph = () => {
         <>
             <div className='graph'>
                 <br/>
-                <Button variant="outlined" onClick={generateStartingPoint} >
-                    Set Starting Point
-                </Button>
-                <Button variant="outlined" onClick={generateTarget} >
-                    Set Target
-                </Button>
+                
                 <Button variant="outlined" onClick={generateBFS} >
                     Breadth First Search
                 </Button>
@@ -368,11 +341,12 @@ export const Graph = () => {
                     Depth First Search
                 </Button> 
                 <Button variant="outlined" >
-                    Create Maze
+                    Clear Maze
                 </Button>
                 <Button variant="outlined" onClick={generateRandomMaze} >
                     Generate Random Maze
                 </Button>
+
                 <br/>
                 <br/>
             </div>
