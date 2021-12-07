@@ -69,6 +69,7 @@ export const Graph = () => {
     console.log(windowDimensions.height, windowDimensions.width);    
 
     const generateMaze = () => {
+        
         for(let i = 0; i < nodes; ++i){
             const temp = new Array(nodes);
             
@@ -76,7 +77,7 @@ export const Graph = () => {
                 temp[j] = 0;
             }
             adjacencyMatrix.push(temp);
-            updateMatrix({paramMatrix:adjacencyMatrix});
+            // updateMatrix({paramMatrix:adjacencyMatrix});
         }        
 
         //Creates all the edges for the maze
@@ -138,8 +139,7 @@ export const Graph = () => {
         for(let i = 0; i < nodes; ++i){
             adjacencyMatrix[i].push(i);
             adjacencyMatrix[i].flag = false;
-        }
-        
+        }        
     }
 
     const showMarkers = () => {
@@ -155,12 +155,8 @@ export const Graph = () => {
     const clearMaze = async () =>{
         console.log('clear maze');
         stopFlag = false;
-        const temp = paramMatrix.paramMatrix;
-        console.log(clearedMatrix === paramMatrix);
-        console.log(clearedMatrix);
-        console.log(paramMatrix);
-        // await generateMaze();
-        await updateMatrix({paramMatrix:clearedMatrix});
+        await generateMaze();
+        await updateMatrix({paramMatrix:adjacencyMatrix});        
         console.log('cleared');
         await setVisibility(false);
         await setVisibility(true);
@@ -169,19 +165,14 @@ export const Graph = () => {
     }
 
     const generateRandomMaze = async () =>{
-        const check = paramMatrix.paramMatrix;
         await clearMaze();
-        console.log(check === paramMatrix.paramMatrix);
-        // setTimeout(() => {
-        //     tempWallGenerate()
-        // }, 5000);
-        // await new Promise(resolve => setTimeout(resolve));
-        await tempWallGenerate();
+        console.log('matrix is cleared');
+        await wallGenerate();
     }
 
-    const tempWallGenerate = async () => {
+    const wallGenerate = () => {
         console.log('generate random maze');
-        const temp = paramMatrix.paramMatrix;
+        const temp = adjacencyMatrix;
         const startId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting')[0].id);
         const targetId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')[0].id);
         for(let i = 0; i < Math.ceil(Math.random()*randomSize+randomSize); ++i){
@@ -247,10 +238,11 @@ export const Graph = () => {
                 temp[num+tableWidth][num] = 0;
                 temp[num-tableWidth][num] = 0;
             }
-            temp[num].flag = true;            
+            temp[num].flag = true;
             const element = document.getElementById(num);
             element.className='MuiBox-root css-1rqr9y6 wall';
         }
+        console.log('all walls generated');
         updateMatrix({paramMatrix:temp});
     }
 
@@ -319,7 +311,6 @@ export const Graph = () => {
                 }
             }            
         }
-        console.log(string);
     }
 
     const generateDFS = async () => {
