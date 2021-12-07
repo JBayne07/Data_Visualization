@@ -25,6 +25,7 @@ let stopFlag = false;
 export const Graph = () => {
     const adjacencyMatrix = [];
     const initialMatrix = {paramMatrix:adjacencyMatrix};
+    const [clearedMatrix, setClearedMatrix] = useState();
     const [childData, setChildData] = useState();
     // const [wall, setWall] = useState(false);
     const [windowDimensions, setWindowDimensions] = useState(initialWindow);
@@ -38,9 +39,11 @@ export const Graph = () => {
             showMarkers();
         }, 1000);
 
-        generateMaze();
+        generateMaze();        
         console.log(adjacencyMatrix);
+        setClearedMatrix(adjacencyMatrix);
         updateMatrix({paramMatrix:adjacencyMatrix});
+        console.log('starting');
     }, [])
 
     //Obtains the matrix from the child components
@@ -60,9 +63,10 @@ export const Graph = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         }
+        
     });
 
-    console.log(windowDimensions.height, windowDimensions.width);
+    console.log(windowDimensions.height, windowDimensions.width);    
 
     const generateMaze = () => {
         for(let i = 0; i < nodes; ++i){
@@ -135,6 +139,7 @@ export const Graph = () => {
             adjacencyMatrix[i].push(i);
             adjacencyMatrix[i].flag = false;
         }
+        
     }
 
     const showMarkers = () => {
@@ -144,19 +149,37 @@ export const Graph = () => {
         num = (10*tableWidth+40);
         element = document.getElementById(num);
         element.className = 'MuiBox-root css-1rqr9y6 target';
+        console.log('markers are shown');
     }
 
     const clearMaze = async () =>{
         console.log('clear maze');
         stopFlag = false;
-        await generateMaze();
-        await updateMatrix({paramMatrix:adjacencyMatrix});
+        const temp = paramMatrix.paramMatrix;
+        console.log(clearedMatrix === paramMatrix);
+        console.log(clearedMatrix);
+        console.log(paramMatrix);
+        // await generateMaze();
+        await updateMatrix({paramMatrix:clearedMatrix});
+        console.log('cleared');
         await setVisibility(false);
         await setVisibility(true);
-        await showMarkers();        
+        await showMarkers();
+        console.log('everything reset');
     }
 
-    const generateRandomMaze = () =>{
+    const generateRandomMaze = async () =>{
+        const check = paramMatrix.paramMatrix;
+        await clearMaze();
+        console.log(check === paramMatrix.paramMatrix);
+        // setTimeout(() => {
+        //     tempWallGenerate()
+        // }, 5000);
+        // await new Promise(resolve => setTimeout(resolve));
+        await tempWallGenerate();
+    }
+
+    const tempWallGenerate = async () => {
         console.log('generate random maze');
         const temp = paramMatrix.paramMatrix;
         const startId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting')[0].id);
@@ -224,11 +247,11 @@ export const Graph = () => {
                 temp[num+tableWidth][num] = 0;
                 temp[num-tableWidth][num] = 0;
             }
-            temp[num].flag = true;
-            updateMatrix({paramMatrix:temp});
+            temp[num].flag = true;            
             const element = document.getElementById(num);
             element.className='MuiBox-root css-1rqr9y6 wall';
         }
+        updateMatrix({paramMatrix:temp});
     }
 
     const generateBFS = async () => {
@@ -245,15 +268,12 @@ export const Graph = () => {
         }
 
         await BFS(temp, startId, targetId, path);
-        console.log(path);
         
         for(let i = targetId; i !== null; i = path[i]){
-            console.log(i);
             reverse.push(i);
         }
         
         for(let i = reverse.length-2; i > 0; --i){
-            console.log(i,' ',reverse[i]);
             await new Promise(resolve => setTimeout(resolve));
             const tempElement = document.getElementById(reverse[i]);
             tempElement.className = 'MuiBox-root css-1rqr9y6 path'
