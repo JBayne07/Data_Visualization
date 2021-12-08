@@ -25,8 +25,7 @@ let stopFlag = false;
 export const Graph = () => {
     const adjacencyMatrix = [];
     const initialMatrix = {paramMatrix:adjacencyMatrix};
-    const [clearedMatrix, setClearedMatrix] = useState();
-    const [childData, setChildData] = useState();
+    // const [clearedMatrix, setClearedMatrix] = useState();
     // const [wall, setWall] = useState(false);
     const [windowDimensions, setWindowDimensions] = useState(initialWindow);
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
@@ -41,17 +40,10 @@ export const Graph = () => {
 
         generateMaze();        
         console.log(adjacencyMatrix);
-        setClearedMatrix(adjacencyMatrix);
+        // setClearedMatrix(adjacencyMatrix);
         updateMatrix({paramMatrix:adjacencyMatrix});
         console.log('starting');
     }, [])
-
-    //Obtains the matrix from the child components
-    useEffect(() => {
-        if(childData !== undefined){
-            updateMatrix({paramMatrix:childData});
-        }
-    }, [childData])
 
     // Handles whenever the window resizes
     useEffect(() => {
@@ -156,7 +148,7 @@ export const Graph = () => {
         console.log('clear maze');
         stopFlag = false;
         await generateMaze();
-        await updateMatrix({paramMatrix:adjacencyMatrix});        
+        await updateMatrix({paramMatrix:adjacencyMatrix});
         console.log('cleared');
         await setVisibility(false);
         await setVisibility(true);
@@ -311,6 +303,7 @@ export const Graph = () => {
                 }
             }            
         }
+        console.log(string);
     }
 
     const generateDFS = async () => {
@@ -407,7 +400,7 @@ export const Graph = () => {
                 <br/>
             </div>
             <div id='graphBoxContainer' >
-            {visibility ? <BoxContainer tableHeight={tableHeight} tableWidth={tableWidth} matrix={paramMatrix} passChildData={setChildData}/> : null }
+            {visibility ? <BoxContainer tableHeight={tableHeight} tableWidth={tableWidth} matrix={paramMatrix}/> : null }
             </div>            
         </>        
     )

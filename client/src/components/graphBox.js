@@ -1,8 +1,13 @@
 import './graphBox.css'
 import {Box} from '@mui/system'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
-export const GraphBox = (props) =>{
+let startTargetFlag = false;
+let wallFlag = true;
+let tempNum = 0;
+
+export const GraphBox = (props) =>{    
+    let wallCount = 0;
     const [wall, setWall] = useState(false);
     let element;
     setTimeout(() =>{
@@ -28,38 +33,56 @@ export const GraphBox = (props) =>{
         }
     }
 
-    const dragBox = event => {
-        console.log('drag start', props.id);
+    const dragBox = event => {        
         event.dataTransfer.setData("id", props.id)
-        console.log(event);
-    }
+        let element = document.getElementById(props.id);
+        startTargetFlag = false;       
 
-    const dragEndBox = event => {
-        console.log('drag end', props.id);
+        //Determines if you clicked on a wall or not, so the program determines if the user will clear the walls or add walls to the maze
+        if(element.className === 'MuiBox-root css-1rqr9y6 wall'){
+            wallFlag = true;
+        }else{
+            wallFlag = false;
+        }
     }
 
     const dropBox = event => {
         event.stopPropagation();
         event.preventDefault();
-        console.log('drag exit', event);
+
         let element = document.getElementById(event.target.id);
         let originalElement = document.getElementById(event.dataTransfer.getData("id"));
+        //Moves the starting target to where it was dropped and makes the original place become an empty box
         if(originalElement.className === element.className){
             return;
         }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 starting'){
             element.className = 'MuiBox-root css-1rqr9y6 starting';
-            originalElement.className = 'MuiBox-root css-1rqr9y6'
+            originalElement.className = 'MuiBox-root css-1rqr9y6';
         }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 target'){
             element.className = 'MuiBox-root css-1rqr9y6 target';
-            originalElement.className = 'MuiBox-root css-1rqr9y6'
-        }        
-        
+            originalElement.className = 'MuiBox-root css-1rqr9y6';
+        }
     }
 
-    const dragOverBox = event => {
+    const dragOverBox = async (event) => {
         event.stopPropagation();
         event.preventDefault();
+        let element = document.getElementById(event.target.id);       
 
+        if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
+            startTargetFlag = true;
+            return;
+        }
+
+        if(!startTargetFlag){
+            if(wallFlag){
+                setClassName(wall, element);
+                setWall(true);                
+            }else{
+                setClassName(wall, element);
+                setWall(false);
+            }
+        }
     }
 
     const setClassName = (flag, element) => {
@@ -188,10 +211,9 @@ export const GraphBox = (props) =>{
                 temp[num-tableWidth][num] = 0;
             }
         }
-        props.passChildData(temp);
     }
     
     return(
-        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragEnd={dragEndBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, display: 'flex', justifyContent: 'center', border: '1px solid grey'}}/>
+        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, display: 'flex', justifyContent: 'center', border: '1px solid grey'}}/>
     )
 }
