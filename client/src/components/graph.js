@@ -316,7 +316,7 @@ export const Graph = () => {
         const visitedArr = new Array(nodes);
 
         let string = '';
-        let path = new Array(nodes);
+        let path = [];
         let reverse = [];
 
         for(let i = 0; i < path.length; ++i){
@@ -329,17 +329,26 @@ export const Graph = () => {
         
         await DFS(temp, startId, targetId, visitedArr, string, path);
         console.log(path);
-        for(let i = path[targetId]; i !== null ; i = path[i]){
-            // console.log(i);
-            reverse.push(i);            
-        }
+        console.log(path[path.length-1], targetId);
+        // if(path[path.length-1] === targetId){
+            for(let i = 0; i < path.length-1; ++i){
+                console.log(i, path[i]);
+                await new Promise(resolve => setTimeout(resolve), 1000);
+                const tempElement = document.getElementById(path[i]);
+                tempElement.className = 'MuiBox-root css-1rqr9y6 path';
+            }
+        // }
+        
 
-        for(let i = reverse.length-1; i > -1; --i){
-            // console.log(i);
-            await new Promise(resolve => setTimeout(resolve), 1000);
-            const tempElement = document.getElementById(reverse[i]);
-            tempElement.className = 'MuiBox-root css-1rqr9y6 path';
-        }
+        // for(let i = path[targetId]; i !== null ; i = path[i]){
+        //     reverse.push(i);            
+        // }
+
+        // for(let i = reverse.length-1; i > -1; --i){
+        //     await new Promise(resolve => setTimeout(resolve), 1000);
+        //     const tempElement = document.getElementById(reverse[i]);
+        //     tempElement.className = 'MuiBox-root css-1rqr9y6 path';
+        // }
     }
 
     const DFS = async (matrix, start, target, visited, string, path) => {        
@@ -347,6 +356,8 @@ export const Graph = () => {
         let flag = false
         const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
         const startId = parseInt(startElement[0].id);
+
+        //So the starting node doesn't change colour
         if(visited[startId] === false){
             flag = true;
         }
@@ -358,21 +369,22 @@ export const Graph = () => {
             if((matrix[start][i] === 1) && (!visited[i])){
                 await new Promise(resolve => setTimeout(resolve));
                 if(stopFlag === true){
+                    path.push(start);
                     return;
                 }
                 if(start === target){
                     console.log('Found the target');
                     stopFlag = true;
-                    // console.log(start)
-                    path[i] = start;
+                    // path[i] = start;
+                    path.push(start);
                     return;
                 }
                 if(!flag){
                     const element = document.getElementById(start);
                     element.className = 'MuiBox-root css-1rqr9y6 searching';
-                    // console.log(start)
-                    path[i] = start;
-                }                
+                    // path[i] = start;
+                    path.push(start);
+                }
                 await DFS(matrix, i, target, visited, string, path);
             }
         }

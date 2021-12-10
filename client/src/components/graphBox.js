@@ -1,13 +1,11 @@
 import './graphBox.css'
-import {Box} from '@mui/system'
-import React, { useEffect, useState, useCallback } from "react";
+import {Box} from '@mui/system' 
+import React, { useEffect, useState } from "react";
 
 let startTargetFlag = false;
 let wallFlag = true;
-let tempNum = 0;
 
-export const GraphBox = (props) =>{    
-    let wallCount = 0;
+export const GraphBox = (props) =>{
     const [wall, setWall] = useState(false);
     let element;
     setTimeout(() =>{
@@ -76,11 +74,11 @@ export const GraphBox = (props) =>{
 
         if(!startTargetFlag){
             if(wallFlag){
-                setClassName(wall, element);
-                setWall(true);                
-            }else{
-                setClassName(wall, element);
+                setClassName(true, element);
                 setWall(false);
+            }else{
+                setClassName(false, element);
+                setWall(true);
             }
         }
     }
