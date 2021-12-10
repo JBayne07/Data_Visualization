@@ -327,18 +327,7 @@ export const Graph = () => {
             visitedArr[i] = false;
         }
         
-        await DFS(temp, startId, targetId, visitedArr, string, path);
-        console.log(path);
-        // console.log(path[path.length-1], targetId);
-        // if(path[path.length-1] === targetId){
-            // for(let i = 1; i < path.length-1; ++i){
-            //     console.log(i, path[i]);
-            //     await new Promise(resolve => setTimeout(resolve), 1000);
-            //     const tempElement = document.getElementById(path[i]);
-            //     tempElement.className = 'MuiBox-root css-1rqr9y6 path';
-            // }
-        // }
-        
+        await DFS(temp, startId, targetId, visitedArr, string, path);      
 
         for(let i = path[targetId]; i !== null ; i = path[i]){
             reverse.push(i);            
@@ -364,35 +353,28 @@ export const Graph = () => {
 
         string += start + ' ';
         visited[start] = true;
-        // path.push(start);
         if(matrix[start].length > 0){
             for(let i = 0; i < matrix[start].length-1; ++i){
                 if((matrix[start][i] === 1) && (!visited[i])){
                     await new Promise(resolve => setTimeout(resolve),1000);
                     if(stopFlag === true){
-                        // path.push(start);
                         return;
                     }
                     if(start === target){
                         console.log('Found the target');
                         stopFlag = true;
                         path[i] = start;
-                        // path.push(start);
                         return;
                     }
                     if(!flag){
                         const element = document.getElementById(start);
                         element.className = 'MuiBox-root css-1rqr9y6 searching';
                         path[i] = start;
-                        // path.push(start);
                     }
                     await DFS(matrix, i, target, visited, string, path);
                 }
             }
-        }
-        // console.log('hi');
-        // path.pop();
-        
+        }        
     }
 
     return(
