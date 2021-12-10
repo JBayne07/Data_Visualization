@@ -212,6 +212,6 @@ export const GraphBox = (props) =>{
     }
     
     return(
-        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, display: 'flex', justifyContent: 'center', border: '1px solid grey'}}/>
+        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, justifyContent: 'center', border: '1px solid grey'}}/>
     )
 }

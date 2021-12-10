@@ -394,7 +394,11 @@ export const Graph = () => {
                 <Button variant="outlined" onClick={generateRandomMaze} >
                     Generate Random Maze
                 </Button>
-
+                <br/>
+                <br/>
+                <label className='legendText'>Legend</label>
+                <br/>
+                <label className='legendText'> Green = Start, Purple = Target, Red = Walls, Orange = Searching, Blue = Path To Target</label>
                 <br/>
                 <br/>
             </div>
