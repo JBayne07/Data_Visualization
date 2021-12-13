@@ -20,7 +20,7 @@ export const Navbar = () => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                My App
+                Algorithm Visualization
               </Typography>
               <Button variant="contained" color="inherit">               
                   <Link to='/' className='HomePage' color="inherit">

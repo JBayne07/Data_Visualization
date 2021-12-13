@@ -342,7 +342,7 @@ export const Graph = () => {
 
     const DFS = async (matrix, start, target, visited, string, path) => {        
         await new Promise(resolve => setTimeout(resolve));
-        let flag = false
+        let flag = false;
         const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
         const startId = parseInt(startElement[0].id);
 
