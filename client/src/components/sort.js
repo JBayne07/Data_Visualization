@@ -1,7 +1,8 @@
 import { BarContainer } from "./barContainer";
 import { Button, Slider, Box } from "@mui/material";
-import './sort.css'
-import { useEffect, useState } from "react";
+import './sort.css';
+import React, { useEffect, useState } from "react";
+import {useSpring, useSprings, Spring, animated} from 'react-spring';
 // let testArr = [38, 27, 43, 3, 9, 82, 10]
 let totalArr = [];
 let arr = [];
@@ -35,10 +36,14 @@ export const Sort = () => {
     const [parameters, setParameters] = useState(
         initialParameters
     );
-
+    
     const [visibility, setVisibility] = useState(false);
-
     const [size, setSize] = useState(50);
+
+    const visibleProps = useSpring({
+        opacity: visibility ? 1 : 0,
+        marginLeft: visibility ? 0 : -1000
+    });
 
     const showData = (array) => {
         shuffledArr = array.sort(() => 0.5 - Math.random());
@@ -50,7 +55,7 @@ export const Sort = () => {
         setParameters({paramArr:arr});
     }
     
-    const hideData = () => {        
+    const hideData = () => {
         setVisibility(false);
     }
 
@@ -61,8 +66,7 @@ export const Sort = () => {
                 showData(totalArr);
             }
         }
-        setSize(newSize);
-        
+        setSize(newSize);        
     }
 
     const bubbleSort = async (array) => {
@@ -371,9 +375,16 @@ export const Sort = () => {
                 <br/>
                 <br/>
             </div>
-            <div id='sortBarContainer'>
-                {visibility ? <BarContainer parameters={parameters}/> : null}
-            </div>
+
+            {visibility ? (
+                <animated.div id='sortBarContainer' style={visibleProps}>
+                    <BarContainer parameters={parameters}/>
+                </animated.div>
+            ) : (
+                <animated.div id='sortBarContainer' style={visibleProps}>
+                    <BarContainer parameters={parameters}/>
+                </animated.div>
+            )}
         </>
         
     );    

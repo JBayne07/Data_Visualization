@@ -70,6 +70,8 @@ export const GraphBox = (props) =>{
         if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
             startTargetFlag = true;
             return;
+        }else{
+            startTargetFlag = false;
         }
 
         if(!startTargetFlag){

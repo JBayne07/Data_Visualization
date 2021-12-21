@@ -4,6 +4,8 @@ const width = 5;
 
 export const BarContainer = ({parameters}) => {
     currentArr = parameters.paramArr;
+
+    
     return(
         <>
             {currentArr.map((element) => {
