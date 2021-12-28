@@ -65,15 +65,18 @@ export const GraphBox = (props) =>{
     const dragOverBox = async (event) => {
         event.stopPropagation();
         event.preventDefault();
-        let element = document.getElementById(event.target.id);       
+        let element = document.getElementById(event.target.id);        
 
         if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
             startTargetFlag = true;
             return;
         }else{
+            if(startTargetFlag){
+                return;
+            }
             startTargetFlag = false;
         }
-
+        
         if(!startTargetFlag){
             if(wallFlag){
                 setClassName(true, element);
