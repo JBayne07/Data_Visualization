@@ -33,14 +33,17 @@ export const GraphBox = (props) =>{
 
     const dragBox = event => {        
         event.dataTransfer.setData("id", props.id)
-        let element = document.getElementById(props.id);
-        startTargetFlag = false;       
+        let element = document.getElementById(props.id);               
 
         //Determines if you clicked on a wall or not, so the program determines if the user will clear the walls or add walls to the maze
-        if(element.className === 'MuiBox-root css-1rqr9y6 wall'){
+        if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
+            startTargetFlag = true;
+        }else if(element.className === 'MuiBox-root css-1rqr9y6 wall'){
             wallFlag = true;
+            startTargetFlag = false;
         }else{
             wallFlag = false;
+            startTargetFlag = false;
         }
     }
 
@@ -68,15 +71,9 @@ export const GraphBox = (props) =>{
         let element = document.getElementById(event.target.id);        
 
         if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
-            startTargetFlag = true;
             return;
-        }else{
-            if(startTargetFlag){
-                return;
-            }
-            startTargetFlag = false;
         }
-        
+        console.log(element.className, element.id);
         if(!startTargetFlag){
             if(wallFlag){
                 setClassName(true, element);
