@@ -1,7 +1,7 @@
 const Num = require( '../models/number');
 
 module.exports.addNum = async (req, res) => {
-    console.log('You called me');
+    // console.log('You called me');
     let num = req.body.value;
     let c = req.body.colour
     // try {
@@ -18,9 +18,8 @@ module.exports.addNum = async (req, res) => {
     res.status(200).json(number)
 };
 
-//TODO:
 module.exports.getAllNum = async (req, res) => {
-    console.log('You called me');
+    console.log('Getting all numbers');
     
     let numArr = [];
     await Num.find(function(err, result){

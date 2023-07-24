@@ -1,7 +1,7 @@
 import { BarContainer } from "./barContainer";
 import { Button, Slider, Box } from "@mui/material";
 import './sort.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {useSpring, useSprings, Spring, animated} from 'react-spring';
 // let testArr = [38, 27, 43, 3, 9, 82, 10]
 let totalArr = [];
@@ -22,16 +22,22 @@ const swap = (array, num1, num2) => {
 }
 
 export const Sort = () => {    
+    const [fetched, setFetched] = useState(false);
+    const [currentlySorting, setCurrentlySorting] = useState(false);
+    const stop = useRef(false);
 
     useEffect (() => {
-        console.log("hi page loaded");
-        fetch('http://localhost:9000/api/numbers',{
-            method: 'GET'
-        })
-        .then(response => response.json())        
-        .then(data => totalArr = data.array[0])
-        .then(() => console.log('frontend: ' , totalArr))
-        }, [])    
+        if (!fetched) {
+            fetch('http://localhost:9000/api/numbers',{
+                method: 'GET'
+            })
+            .then(response => response.json())        
+            .then(data => totalArr = data.array[0])
+            // .then(() => console.log('frontend: ' , totalArr))
+            .then(setFetched(true))
+            .then(() => resetData(totalArr))
+        }
+        }, [fetched])    
 
     const [parameters, setParameters] = useState(
         initialParameters
@@ -45,7 +51,8 @@ export const Sort = () => {
         marginLeft: visibility ? 0 : -1000
     });
 
-    const showData = (array) => {
+    const resetData = (array) => {
+        stop.current = true;
         shuffledArr = array.sort(() => 0.5 - Math.random());
         arr = shuffledArr.slice(0,225*(size/100));
         for(let i = 0; i < arr.length; ++i){
@@ -63,86 +70,120 @@ export const Sort = () => {
         if(newSize !== 100 && newSize !== 0){
             if(visibility){
                 setSize(newSize);
-                showData(totalArr);
+                resetData(totalArr);
             }
         }
         setSize(newSize);        
     }
 
+    const needReset = () => {
+        const x = parameters.paramArr.map((a) => {return a.colour != "black"});
+        return x.reduce((p, c) => {return p || c})
+    }
+
     const bubbleSort = async (array) => {
-        console.log("bubble");
-        let c = array[0].colour;
-        if(visibility){
-            for(let i = 0; i < array.length; ++i){
-                for(let j = 0; j < array.length-i-1; ++j){
-                    await new Promise(resolve => setTimeout(resolve));
-                    if(array[j].value > array[j+1].value){
-                        swap(array, j, j+1)
-                    }else{
-                        array[j].colour = c;
-                        setParameters({paramArr:array});
-                    }
-                    if(j === array.length-i-2){
-                        array[j+1].colour = "pink";
-                        setParameters({paramArr:array});
-                    }
-                    if(i === array.length-2){
-                        array[0].colour = "pink";
-                        setParameters({paramArr:array});
-                    }
-                    setParameters({paramArr:array})
-                }                
-            }            
+        if (currentlySorting) {
+            stop.current = true;
+            setCurrentlySorting(false);
+            return;
+        } else {
+            if (needReset()) {
+                resetData(totalArr);
+            }
+            stop.current = false;
+            setCurrentlySorting(true);
         }
+
+        let c = array[0].colour;
+
+        for(let i = 0; i < array.length; ++i){
+            if (stop.current) break;
+            for(let j = 0; j < array.length-i-1; ++j){
+                if (stop.current) break;
+                await new Promise(resolve => setTimeout(resolve, 0));
+                if(array[j].value > array[j+1].value){
+                    swap(array, j, j+1)
+                }else{
+                    array[j].colour = c;
+                    setParameters({paramArr:array});
+                }
+                if(j === array.length-i-2){
+                    array[j+1].colour = "pink";
+                    setParameters({paramArr:array});
+                }
+                if(i === array.length-2){
+                    array[0].colour = "pink";
+                    setParameters({paramArr:array});
+                }
+                setParameters({paramArr:array})
+            }                
+        }           
+        stop.current = false;
+        setCurrentlySorting(false);
     }
 
     const selectionSort = async (array) => {
+        if (currentlySorting) {
+            stop.current = true;
+            setCurrentlySorting(false);
+            return;
+        } else {
+            if (needReset()) {
+                resetData(totalArr);
+            }
+            stop.current = false;
+            setCurrentlySorting(true);
+        }
+
         console.log("selection");
         let minIndex = 0
         let c = array[0].colour;
-        if(visibility){            
-            for(let i = 0; i < array.length-1; ++i){
-                for(let j = i+1; j < array.length; ++j){                                       
-                    await new Promise(resolve => setTimeout(resolve));
-                        // array[j].colour = "grey";
-                        // if(j > 1){
-                        //     await new Promise(resolve => setTimeout(resolve));
-                        //     array[j-1].colour = c;
-                        // }
-                        
-                        if(j === i+1){
-                            minIndex = i;
-                        }
-                        if(array[j].value < array[minIndex].value){
+        // if(visibility){            
+        for(let i = 0; i < array.length-1; ++i){
+            if (stop.current) break;
+            for(let j = i+1; j < array.length; ++j){    
+                if (stop.current) break;
+                await new Promise(resolve => setTimeout(resolve));
+                    // array[j].colour = "grey";
+                    // if(j > 1){
+                    //     await new Promise(resolve => setTimeout(resolve));
+                    //     array[j-1].colour = c;
+                    // }
+                    
+                    if(j === i+1){
+                        minIndex = i;
+                    }
+                    if(array[j].value < array[minIndex].value){
+                        array[minIndex].colour = c;
+                        minIndex = j;
+                        array[minIndex].colour = "blue";
+                        setParameters({paramArr:array});
+                    }
+                    
+                    if(j === array.length-1){
+                        if(i === minIndex){
+                            array[i].colour = "pink";
+                            setParameters({paramArr: array});
+                        }else{
+                            let temp = array[i].value;
+                            array[i].value = array[minIndex].value;
+                            array[minIndex].value = temp;
+                            array[i].colour = "pink";
                             array[minIndex].colour = c;
-                            minIndex = j;
-                            array[minIndex].colour = "blue";
+                            setParameters({paramArr: array});  
+                        }
+                        if(i === array.length-2){
+                            array[i+1].colour = "pink";
                             setParameters({paramArr:array});
                         }
-                        
-                        if(j === array.length-1){
-                            if(i === minIndex){
-                                array[i].colour = "pink";
-                                setParameters({paramArr: array});
-                            }else{
-                                let temp = array[i].value;
-                                array[i].value = array[minIndex].value;
-                                array[minIndex].value = temp;
-                                array[i].colour = "pink";
-                                array[minIndex].colour = c;
-                                setParameters({paramArr: array});  
-                            }
-                            if(i === array.length-2){
-                                array[i+1].colour = "pink";
-                                setParameters({paramArr:array});
-                            }
-                        }else{
-                            array[i].colour = "green";
-                        }
+                    }else{
+                        array[i].colour = "green";
                     }
-                                          
+                }                 
             }
-        }        
+        // }
+        stop.current = false;
+        setCurrentlySorting(false);        
     }
 
     const triggerMergeSort = (array) => {
@@ -345,11 +386,12 @@ export const Sort = () => {
                 </Box>
 
                 <Button variant="outlined" onClick={() => bubbleSort(arr)} >
-                    Bubble
+                    {!currentlySorting ? 'Bubble' : 'Stop'}
                 </Button>
 
+                {currentlySorting ? <></> :  (<>
                 <Button variant="outlined" onClick={() => selectionSort(arr)} >
-                    Selection
+                    {!currentlySorting ? 'Selection' : 'Stop'}
                 </Button>
 
                 <Button variant="outlined" onClick={() => triggerMergeSort(arr)} >
@@ -364,13 +406,14 @@ export const Sort = () => {
                     Heap
                 </Button>
 
-                <Button variant="outlined" onClick={() => showData(totalArr)} >
-                    Show Data
+                <Button variant="outlined" onClick={() => resetData(totalArr)} >
+                    Reset Data
                 </Button>
 
                 <Button variant="outlined" onClick={hideData} >
                     Hide Data
                 </Button>
+                </>)}
                 
                 <br/>
                 <br/>
