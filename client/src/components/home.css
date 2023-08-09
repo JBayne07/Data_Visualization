@@ -1,0 +1,29 @@
+.homeContainer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    margin: 4rem;
+    margin-top: 8rem;
+}
+
+.contentContainer {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.buttonContainer {
+    display: flex;
+    margin: auto;
+    /* width: 20.2rem; */
+}
+
+.mainTitle {
+    color: #1976d2;
+}
+
+.subTitle {
+    margin-top: 4rem;
+    color: #1976d2;
+}

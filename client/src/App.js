@@ -8,23 +8,14 @@ import {Navbar} from './components/navbar';
 class App extends Component{
   render(){
     return(
-      <div>
+      <>
         <Router>
           <Navbar />
           <Routes />
         </Router>
-      </div>
+      </>
     )
   }
 }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <Navbar/>
-//       <Routes/>
-//     </div>
-//   );
-// }
 
 export default App;

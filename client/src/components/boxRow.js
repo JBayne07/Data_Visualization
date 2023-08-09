@@ -10,9 +10,9 @@ export const BoxRow = (props) =>{
     
     return(
         <div className='boxRow'>
-            {array.map((element) => {
+            {array.map((element, index) => {
                 return(                    
-                    <GraphBox id={element} tableWidth={props.tableWidth} tableHeight={props.tableHeight} flag={props.matrix.paramMatrix[element].flag} matrix={props.matrix}/>
+                    <GraphBox key={`boxrow${index}`} id={element} tableWidth={props.tableWidth} tableHeight={props.tableHeight} flag={props.matrix.paramMatrix[element].flag} matrix={props.matrix}/>
                 )
             })}
         </div>

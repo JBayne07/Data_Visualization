@@ -51,7 +51,7 @@ export const Sort = () => {
         marginLeft: visibility ? 0 : -1000
     });
 
-    const resetData = (array) => {
+    const resetData = async (array) => {
         stop.current = true;
         shuffledArr = array.sort(() => 0.5 - Math.random());
         arr = shuffledArr.slice(0,225*(size/100));
@@ -81,19 +81,39 @@ export const Sort = () => {
         return x.reduce((p, c) => {return p || c})
     }
 
-    const bubbleSort = async (array) => {
+    const sortHandler = async (algorithm) => {
         if (currentlySorting) {
             stop.current = true;
             setCurrentlySorting(false);
             return;
         } else {
             if (needReset()) {
-                resetData(totalArr);
+                await resetData(totalArr);
             }
             stop.current = false;
             setCurrentlySorting(true);
         }
 
+        switch(algorithm) {
+            case 'bubble':
+                bubbleSort(arr);
+                break;
+            case 'selection':
+                selectionSort(arr);
+                break;
+            case 'merge':
+                triggerMergeSort(arr);
+                break;
+            case 'quick':
+                triggerQuickSort(arr);
+                break;
+            case 'heap':
+                triggerHeapSort(arr);
+                break;
+        }
+    }
+
+    const bubbleSort = async (array) => {
         let c = array[0].colour;
 
         for(let i = 0; i < array.length; ++i){
@@ -123,19 +143,7 @@ export const Sort = () => {
     }
 
     const selectionSort = async (array) => {
-        if (currentlySorting) {
-            stop.current = true;
-            setCurrentlySorting(false);
-            return;
-        } else {
-            if (needReset()) {
-                resetData(totalArr);
-            }
-            stop.current = false;
-            setCurrentlySorting(true);
-        }
-
-        console.log("selection");
+        // console.log("selection");
         let minIndex = 0
         let c = array[0].colour;
         // if(visibility){            
@@ -186,15 +194,16 @@ export const Sort = () => {
         setCurrentlySorting(false);        
     }
 
-    const triggerMergeSort = (array) => {
+    const triggerMergeSort = async (array) => {
         console.log("merge");
-        if(visibility){
-            mergeSort(array, 0, array.length-1);            
-        }               
+        await mergeSort(array, 0, array.length-1);            
+        stop.current = false;
+        setCurrentlySorting(false);
     }
 
     const mergeSort = async (array, left, right) => {
         // let c = array[0].colour;
+        if (stop.current) return;
         if(left>=right){
             return;
         }
@@ -206,6 +215,7 @@ export const Sort = () => {
 
         if((right - left) === array.length-1){
             for(let i = 0; i < array.length; ++i){
+                if (stop.current) break;
                 array[i].colour = "pink"
             }
             setParameters({paramArr:array});
@@ -214,6 +224,7 @@ export const Sort = () => {
     }
 
     const merge = async (array, left, middle, right) => {
+        if (stop.current) return;
         let leftLength = middle-left+1;
         let rightLength = right-middle;
         let leftArr = [];
@@ -283,9 +294,12 @@ export const Sort = () => {
     const triggerQuickSort = async (array) => {
         console.log("quick");
         await quickSort(array, 0, array.length-1);
+        stop.current = false;
+        setCurrentlySorting(false);
     }
 
     const quickSort = async (array, first, last) => {
+        if (stop.current) return;
         if(first < last){
             const pivotIndex = await partition(array, first, last);
             await quickSort(array, first, pivotIndex-1);
@@ -298,10 +312,12 @@ export const Sort = () => {
     }
 
     const partition = async (array, first, last) => {
+        if (stop.current) return;
         const pivot = array[last].value;
         let index = first - 1;
 
         for(let i = first; i <= last-1; ++i){
+            if (stop.current) return;
             await new Promise(resolve => setTimeout(resolve));
             if(array[i].value < pivot){
                 index++;
@@ -324,14 +340,18 @@ export const Sort = () => {
     const triggerHeapSort = async (array) => {
         console.log("heap");
         await heapSort(array, array.length);
+        stop.current = false;
+        setCurrentlySorting(false);
     }
 
     const heapSort = async (array, length) => {
         for(let i = Math.floor(length/2) - 1; i >= 0; i--) {
+            if (stop.current) return;
             await heapify(array, length, i);
         }
 
         for(let i = length - 1; i > 0; i--) {
+            if (stop.current) return;
             await new Promise(resolve => setTimeout(resolve));
             const temp = array[0];
             array[0] = array[i];
@@ -345,6 +365,7 @@ export const Sort = () => {
     }
 
     const heapify = async (array, length, i) => {
+        if (stop.current) return;
         let largest = i;
         let l = 2*i + 1;
         let r = 2*i + 2;
@@ -385,34 +406,34 @@ export const Sort = () => {
                     </Slider>
                 </Box>
 
-                <Button variant="outlined" onClick={() => bubbleSort(arr)} >
+                <Button variant="outlined" onClick={() => sortHandler('bubble')} >
                     {!currentlySorting ? 'Bubble' : 'Stop'}
                 </Button>
 
                 {currentlySorting ? <></> :  (<>
-                <Button variant="outlined" onClick={() => selectionSort(arr)} >
-                    {!currentlySorting ? 'Selection' : 'Stop'}
-                </Button>
+                    <Button variant="outlined" onClick={() => sortHandler('selection')} >
+                        Selection
+                    </Button>
 
-                <Button variant="outlined" onClick={() => triggerMergeSort(arr)} >
-                    Merge
-                </Button>
+                    <Button variant="outlined" onClick={() => sortHandler('merge')} >
+                        Merge
+                    </Button>
 
-                <Button variant="outlined" onClick={() => triggerQuickSort(arr)} >
-                    Quick
-                </Button>
+                    <Button variant="outlined" onClick={() => sortHandler('quick')} >
+                        Quick
+                    </Button>
 
-                <Button variant="outlined" onClick={() => triggerHeapSort(arr)} >
-                    Heap
-                </Button>
+                    <Button variant="outlined" onClick={() => sortHandler('heap')} >
+                        Heap
+                    </Button>
 
-                <Button variant="outlined" onClick={() => resetData(totalArr)} >
-                    Reset Data
-                </Button>
+                    <Button variant="outlined" onClick={() => resetData(totalArr)} >
+                        Reset Data
+                    </Button>
 
-                <Button variant="outlined" onClick={hideData} >
-                    Hide Data
-                </Button>
+                    <Button variant="outlined" onClick={hideData} >
+                        Hide Data
+                    </Button>
                 </>)}
                 
                 <br/>

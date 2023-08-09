@@ -16,9 +16,9 @@ export const BoxContainer = (props) => {
 
     return(
         <div className='boxContainer'>
-            {array.map((element) => {
+            {array.map((element, index) => {
                 return(                    
-                    <BoxRow num={element} onDrop={dropBox} tableHeight={props.tableHeight} tableWidth={props.tableWidth} matrix={props.matrix}/>
+                    <BoxRow key={`boxContainer${index}`} num={element} onDrop={dropBox} tableHeight={props.tableHeight} tableWidth={props.tableWidth} matrix={props.matrix}/>
                 )
             })}
         </div>        

@@ -8,9 +8,9 @@ export const BarContainer = ({parameters}) => {
     
     return(
         <>
-            {currentArr.map((element) => {
+            {currentArr.map((element, index) => {
                 return(
-                    <Bar height={element.value} width={width} colour={element.colour}/>
+                    <Bar key={index} height={element.value} width={width} colour={element.colour}/>
                 )
             })}
         </>

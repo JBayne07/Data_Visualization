@@ -12,23 +12,23 @@ export const Navbar = () => {
         <Box sx={{ flexGrow: 2 }}>
           <AppBar position="static">
             <Toolbar>
-              <Typography variant="h4" component="div" sx={{ flexGrow: 2 }}>
-                Algorithm Visualization
+              <Typography variant="h5" component="div" sx={{ flexGrow: 2 }}>
+                Algorithm Visualizer
               </Typography>
               <MenuItem>
-                <Link to='/' className='HomePage' color="inherit" style={{"text-decoration":"none", "color":"white"}}>
+                <Link to='/' className='HomePage' color="inherit" style={{"textDecoration":"none", "color":"white"}}>
                   HOME
                 </Link>
               </MenuItem>
 
               <MenuItem>
-                <Link to='/sort' className='HomePage' color="inherit" style={{"text-decoration":"none", "color":"white"}}>
+                <Link to='/sort' className='HomePage' color="inherit" style={{"textDecoration":"none", "color":"white"}}>
                   SORTING
                 </Link>
               </MenuItem>
 
               <MenuItem>
-                <Link to='/graph' className='HomePage' color="inherit" style={{"text-decoration":"none", "color":"white"}}>
+                <Link to='/graph' className='HomePage' color="inherit" style={{"textDecoration":"none", "color":"white"}}>
                   GRAPH
                 </Link>
               </MenuItem>
