@@ -1,7 +1,7 @@
 import '../components/graph.css'
-import { Button } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import { BoxContainer } from "./boxContainer";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 
 const tableHeight = 20;
@@ -9,19 +9,12 @@ const tableWidth = 49;
 const randomSize = 400;
 let stopFlag = false;
 
-// Create a datastructure for the maze - done
-// Set up a random start point - done
-// Set up a random target point - done
-// Create BFS - done
-// Create DFS - done
 // Create Dijkstra
 // Create Johnsons
 // Create floyd warshall
 // Create Max Flow
-// onClick wall setup - done
-// Move starting point (lower priority) - done
-// Move target point (lower priority) - done
-//Scale the window length and width to the box size
+
+// Scale the window length and width to the box size
 export const Graph = () => {
     const adjacencyMatrix = [];
     const initialMatrix = {paramMatrix:adjacencyMatrix};
@@ -30,7 +23,9 @@ export const Graph = () => {
     const [windowDimensions, setWindowDimensions] = useState(initialWindow);
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
     const [visibility, setVisibility] = useState(false);
-    
+    const [currentlySearching, setCurrentlySearching] = useState(false);
+    const stop = useRef(false);
+
     const nodes = tableHeight*tableWidth;
     useEffect(() =>{
         setTimeout(() =>{
@@ -137,10 +132,10 @@ export const Graph = () => {
     const showMarkers = () => {
         let num = (10*tableWidth+10);
         let element = document.getElementById(num);
-        element.className = 'MuiBox-root css-1rqr9y6 starting';
+        element.className = element.className.concat(' starting');
         num = (10*tableWidth+40);
         element = document.getElementById(num);
-        element.className = 'MuiBox-root css-1rqr9y6 target';
+        element.className = element.className.concat(' target');
         console.log('markers are shown');
     }
 
@@ -165,8 +160,9 @@ export const Graph = () => {
     const wallGenerate = () => {
         console.log('generate random maze');
         const temp = adjacencyMatrix;
-        const startId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting')[0].id);
-        const targetId = parseInt(document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')[0].id);
+        const startId = parseInt(document.getElementsByClassName('starting')[0].id);
+        const targetId = parseInt(document.getElementsByClassName('target')[0].id);
+        
         for(let i = 0; i < Math.ceil(Math.random()*randomSize+randomSize); ++i){
             const num = Math.round(Math.random()*(nodes-1));
             if(num === startId || num === targetId){
@@ -232,18 +228,63 @@ export const Graph = () => {
             }
             temp[num].flag = true;
             const element = document.getElementById(num);
-            element.className='MuiBox-root css-1rqr9y6 wall';
+            element.className = element.className.concat(' wall');
         }
         console.log('all walls generated');
         updateMatrix({paramMatrix:temp});
     }
 
+    const needReset = () => {
+        const check = document.getElementsByClassName('searching');
+        const path = document.getElementsByClassName('path');
+
+        return (check.length + path.length) != 0;
+    }
+
+    const clearSearch = () => {
+        const check = document.getElementsByClassName('searching');
+        const path = document.getElementsByClassName('path');
+        
+        while (check.length > 0) {
+            check[0].className = check[0].className.replace('searching', '');
+        }
+        
+        while (path.length > 0) {
+            path[0].className = path[0].className.replace('path', '');
+        }
+    }
+
+    const searchHandler = async (algorithm) => {
+        if (currentlySearching) {
+            stop.current = true;
+            setCurrentlySearching(false);
+            return;
+        } else {
+            if (needReset()) {
+                await clearSearch();
+            }
+            stop.current = false;
+            setCurrentlySearching(true);
+        }
+        switch (algorithm) {
+            case 'bfs':
+                await generateBFS();
+                break;
+            case 'dfs':
+                await generateDFS();
+                break;
+        }
+        stop.current = false;
+        setCurrentlySearching(false);
+    }
+
     const generateBFS = async () => {
         const temp = paramMatrix.paramMatrix;
-        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
-        const targetElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')
+        const startElement = document.getElementsByClassName('starting');
+        const targetElement = document.getElementsByClassName('target')
         const startId = parseInt(startElement[0].id);
         const targetId = parseInt(targetElement[0].id);
+        console.log('targetid', targetId)
         let path = new Array(nodes);
         let reverse = [];
 
@@ -254,13 +295,15 @@ export const Graph = () => {
         await BFS(temp, startId, targetId, path);
         
         for(let i = targetId; i !== null; i = path[i]){
+            if (stop.current) return;
             reverse.push(i);
         }
         
         for(let i = reverse.length-2; i > 0; --i){
+            if (stop.current) return;
             await new Promise(resolve => setTimeout(resolve));
             const tempElement = document.getElementById(reverse[i]);
-            tempElement.className = 'MuiBox-root css-1rqr9y6 path'
+            tempElement.className = tempElement.className.concat(' path');
         }
 
         console.log('done');
@@ -282,6 +325,7 @@ export const Graph = () => {
         let string = '';
 
         while(!(q.length < 1)){
+            if (stop.current) return;
             await new Promise(resolve => setTimeout(resolve));
             vis = q[0];
             string += vis + ' ';            
@@ -290,13 +334,14 @@ export const Graph = () => {
             for(let i = 0; i < nodes; ++i){
                 if((matrix[vis][i] === 1) && !(visited[i])){
                     await new Promise(resolve => setTimeout(resolve));
+                    console.log(i, target, 'nani')
                     if(i === target){
                         path[i] = vis;
                         console.log('Found the target');
                         return;
                     }
                     const element = document.getElementById(i);
-                    element.className = 'MuiBox-root css-1rqr9y6 searching';
+                    element.className = element.className.concat(' searching');
                     q.push(i);
                     path[i] = vis;
                     visited[i] = true;
@@ -308,8 +353,8 @@ export const Graph = () => {
 
     const generateDFS = async () => {
         const temp = paramMatrix.paramMatrix;
-        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
-        const targetElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 target')
+        const startElement = document.getElementsByClassName(' starting');
+        const targetElement = document.getElementsByClassName(' target')
         
         const startId = parseInt(startElement[0].id);
         const targetId = parseInt(targetElement[0].id);
@@ -330,20 +375,23 @@ export const Graph = () => {
         await DFS(temp, startId, targetId, visitedArr, string, path);      
 
         for(let i = path[targetId]; i !== null ; i = path[i]){
+            if (stop.current) return;
             reverse.push(i);            
         }
 
         for(let i = reverse.length-1; i > -1; --i){
+            if (stop.current) return;
             await new Promise(resolve => setTimeout(resolve), 1000);
             const tempElement = document.getElementById(reverse[i]);
-            tempElement.className = 'MuiBox-root css-1rqr9y6 path';
+            tempElement.className = tempElement.className.concat(' path');
         }
     }
 
-    const DFS = async (matrix, start, target, visited, string, path) => {        
+    const DFS = async (matrix, start, target, visited, string, path) => {    
+        if (stop.current) return;    
         await new Promise(resolve => setTimeout(resolve));
         let flag = false;
-        const startElement = document.getElementsByClassName('MuiBox-root css-1rqr9y6 starting');
+        const startElement = document.getElementsByClassName('starting');
         const startId = parseInt(startElement[0].id);
 
         //So the starting node doesn't change colour
@@ -368,7 +416,7 @@ export const Graph = () => {
                     }
                     if(!flag){
                         const element = document.getElementById(start);
-                        element.className = 'MuiBox-root css-1rqr9y6 searching';
+                        element.className = element.className.concat(' searching');
                         path[i] = start;
                     }
                     await DFS(matrix, i, target, visited, string, path);
@@ -382,24 +430,48 @@ export const Graph = () => {
             <div className='graph'>
                 <br/>
 
-                <Button variant="outlined" onClick={generateBFS} >
-                    Breadth First Search
+                <Button variant="outlined" onClick={() => searchHandler('bfs')} >
+                    {currentlySearching ? 'Stop' : 'Breadth First Search'}
                 </Button>
-                <Button variant="outlined" onClick={generateDFS} >
-                    Depth First Search
-                </Button> 
-                <Button variant="outlined" onClick={clearMaze} >
-                    Clear Maze
-                </Button>
-                <Button variant="outlined" onClick={generateRandomMaze} >
-                    Generate Random Maze
-                </Button>
+                {currentlySearching ? null :
+                    <>
+                        <Button variant="outlined" onClick={() => searchHandler('dfs')} >
+                            Depth First Search
+                        </Button> 
+                        <Button variant="outlined" onClick={clearMaze} >
+                            Clear Maze
+                        </Button>
+                        <Button variant="outlined" onClick={generateRandomMaze} >
+                            Generate Random Maze
+                        </Button>
+                    </>
+                }
                 <br/>
                 <br/>
                 <label className='legendText'>Legend</label>
                 <br/>
-                <label className='legendText'> Green = Start, Purple = Target, Red = Walls, Orange = Searching, Blue = Path To Target</label>
-                <br/>
+                <div className='legendContent'>
+                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#BFE45D', marginRight: '0.5rem'}} />
+                    <label className='legendText'> 
+                        : Start
+                    </label>
+                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#D436CA', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
+                    <label className='legendText'>
+                        : Target
+                    </label>
+                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#414141', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
+                    <label className='legendText'>
+                        : Walls
+                    </label>
+                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#E19223', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
+                    <label className='legendText'>
+                        : Searching
+                    </label>
+                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#4D57D2', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
+                    <label className='legendText'>
+                        : Path
+                    </label>
+                </div>
                 <br/>
             </div>
             <div id='graphBoxContainer' >

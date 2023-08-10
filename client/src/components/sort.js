@@ -61,10 +61,6 @@ export const Sort = () => {
         setVisibility(true);
         setParameters({paramArr:arr});
     }
-    
-    const hideData = () => {
-        setVisibility(false);
-    }
 
     const changeSize = (event, newSize) =>{
         if(newSize !== 100 && newSize !== 0){
@@ -429,10 +425,6 @@ export const Sort = () => {
 
                     <Button variant="outlined" onClick={() => resetData(totalArr)} >
                         Reset Data
-                    </Button>
-
-                    <Button variant="outlined" onClick={hideData} >
-                        Hide Data
                     </Button>
                 </>)}
                 

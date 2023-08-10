@@ -1,15 +1,28 @@
 .wall{
-    background-color: rgb(109, 46, 46);
+    background-color: #414141;
 }
 .starting{
-    background-color: rgb(11, 240, 60);
+    background-color: #BFE45D;
 }
 .target{
-    background-color: rgb(194, 20, 218);
+    background-color: #D436CA;
 }
 .searching{
-    background-color: rgb(236, 216, 28);
+    background-color: #E19223;
 }
 .path{
-    background-color: rgb(30, 180, 168);
+    background-color: #4D57D2;
+}
+.box{
+    height: 5px;
+    width: 5px;
+    padding: 16px;
+}
+
+@media screen and (max-width: 1911px) {
+    .box{
+        height: 3px;
+        width: 3px;
+        padding: 10px;
+    }
 }

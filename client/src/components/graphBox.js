@@ -36,9 +36,9 @@ export const GraphBox = (props) =>{
         let element = document.getElementById(props.id);               
 
         //Determines if you clicked on a wall or not, so the program determines if the user will clear the walls or add walls to the maze
-        if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
+        if(element.className.includes('starting') || element.className.includes('target')){
             startTargetFlag = true;
-        }else if(element.className === 'MuiBox-root css-1rqr9y6 wall'){
+        }else if(element.className.includes('wall')){
             wallFlag = true;
             startTargetFlag = false;
         }else{
@@ -56,12 +56,12 @@ export const GraphBox = (props) =>{
         //Moves the starting target to where it was dropped and makes the original place become an empty box
         if(originalElement.className === element.className){
             return;
-        }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 starting'){
-            element.className = 'MuiBox-root css-1rqr9y6 starting';
-            originalElement.className = 'MuiBox-root css-1rqr9y6';
-        }else if(originalElement.className === 'MuiBox-root css-1rqr9y6 target'){
-            element.className = 'MuiBox-root css-1rqr9y6 target';
-            originalElement.className = 'MuiBox-root css-1rqr9y6';
+        }else if(originalElement.className.includes('starting')){
+            element.className = element.className.replace(' target', '').replace(' searching', '').replace(' path', '').replace(' wall', '').concat(' starting');
+            originalElement.className = originalElement.className.replace('starting', '');
+        }else if(originalElement.className.includes('target')){
+            element.className = element.className.replace(' starting', '').replace(' searching', '').replace(' path', '').replace(' wall', '').concat(' target');
+            originalElement.className = originalElement.className.replace('target', '');
         }
     }
 
@@ -70,7 +70,7 @@ export const GraphBox = (props) =>{
         event.preventDefault();
         let element = document.getElementById(event.target.id);        
 
-        if((element.className === 'MuiBox-root css-1rqr9y6 starting') || (element.className === 'MuiBox-root css-1rqr9y6 target')){
+        if(element.className.includes('starting') || element.className.includes('target')){
             return;
         }
         console.log(element.className, element.id);
@@ -91,7 +91,7 @@ export const GraphBox = (props) =>{
         const tableWidth = props.tableWidth;
         const nodes = props.tableWidth * props.tableHeight;
         if(flag){
-            element.className = 'MuiBox-root css-1rqr9y6';
+            element.className = element.className.replace(' starting', '').replace(' target', '').replace(' searching', '').replace(' path', '').replace(' wall', '');
             if( num >= 0 && num <= tableWidth-1){
                 if(num === 0){
                     temp[num+1][num] = 1;
@@ -151,7 +151,9 @@ export const GraphBox = (props) =>{
                 temp[num-tableWidth][num] = 1;
             }
         }else{
-            element.className = 'MuiBox-root css-1rqr9y6 wall';          
+            if (!element.className.includes('wall')) {
+                element.className = element.className.replace(' starting', '').replace(' target', '').replace(' searching', '').replace(' path', '').concat(' wall');
+            }
             if( num >= 0 && num <= tableWidth-1){
                 if(num === 0){
                     temp[num+1][num] = 0; 
@@ -214,6 +216,6 @@ export const GraphBox = (props) =>{
     }
     
     return(
-        <Box id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{width:5, height:5, p:2, display:'flex', justifyContent: 'center', border: '1px solid grey'}}/>
+        <Box className='box' id={props.id} draggable onClick={changeWall} onDragStart={dragBox} onDragOver={dragOverBox} onDrop={dropBox} sx={{display:'flex', justifyContent: 'center', border: '1px solid grey'}}/>
     )
 }
