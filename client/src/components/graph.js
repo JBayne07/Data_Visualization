@@ -281,10 +281,9 @@ export const Graph = () => {
     const generateBFS = async () => {
         const temp = paramMatrix.paramMatrix;
         const startElement = document.getElementsByClassName('starting');
-        const targetElement = document.getElementsByClassName('target')
+        const targetElement = document.getElementsByClassName('target');
         const startId = parseInt(startElement[0].id);
         const targetId = parseInt(targetElement[0].id);
-        console.log('targetid', targetId)
         let path = new Array(nodes);
         let reverse = [];
 
@@ -334,7 +333,6 @@ export const Graph = () => {
             for(let i = 0; i < nodes; ++i){
                 if((matrix[vis][i] === 1) && !(visited[i])){
                     await new Promise(resolve => setTimeout(resolve));
-                    console.log(i, target, 'nani')
                     if(i === target){
                         path[i] = vis;
                         console.log('Found the target');
@@ -348,7 +346,6 @@ export const Graph = () => {
                 }
             }            
         }
-        console.log(string);
     }
 
     const generateDFS = async () => {
