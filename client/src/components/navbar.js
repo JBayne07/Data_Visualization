@@ -13,7 +13,9 @@ export const Navbar = () => {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h5" component="div" sx={{ flexGrow: 2 }}>
-                Algorithm Visualizer
+                <Link to='/' className='HomePage' color="inherit" style={{"textDecoration":"none", "color":"white"}}>
+                  Algorithm Visualizer
+                </Link>
               </Typography>
               <MenuItem>
                 <Link to='/' className='HomePage' color="inherit" style={{"textDecoration":"none", "color":"white"}}>

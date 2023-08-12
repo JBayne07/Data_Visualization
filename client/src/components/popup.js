@@ -19,16 +19,20 @@ export const Popup = ({parameters}) => {
     const handleClose = () => setOpen(false);
 
     useEffect(() => {
-        if (parameters.open && parameters.open == true) {
+        if (parameters && parameters.open === true) {
             handleOpen();
         }
-    }, [parameters.open]);
+    }, [parameters]);
 
-    if (open == false) {
-        if (parameters) {
-            parameters.setOpen(false);
+    useEffect(() => {
+        if (open === false) {
+            if (parameters && parameters.setOpen) {
+                parameters.setOpen(false);
+            }
         }
-    }
+    }, [parameters])
+
+
 
     return (
         <Modal

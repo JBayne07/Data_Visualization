@@ -22,11 +22,19 @@ const swap = (array, num1, num2) => {
     array[num1].colour = c;
 }
 
+let showPopupValue = true;
+
 export const Sort = () => {    
     const [fetched, setFetched] = useState(false);
     const [currentlySorting, setCurrentlySorting] = useState(false);
-    const [openPopup, setOpenPopup] = useState(true);
+    const [openPopup, setOpenPopup] = useState(showPopupValue);
     const stop = useRef(false);
+
+    useEffect(() => {
+        if (openPopup === false) {
+            showPopupValue = false;
+        }
+    }, [openPopup]);
 
     useEffect (() => {
         if (!fetched) {
@@ -75,7 +83,7 @@ export const Sort = () => {
     }
 
     const needReset = () => {
-        const x = parameters.paramArr.map((a) => {return a.colour != "black"});
+        const x = parameters.paramArr.map((a) => {return a.colour !== "black"});
         return x.reduce((p, c) => {return p || c})
     }
 
@@ -107,6 +115,8 @@ export const Sort = () => {
                 break;
             case 'heap':
                 triggerHeapSort(arr);
+                break;
+            default:
                 break;
         }
     }

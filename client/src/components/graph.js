@@ -4,11 +4,12 @@ import { BoxContainer } from "./boxContainer";
 import React, { useEffect, useState, useRef } from "react";
 import { Popup } from './popup';
 
-const initialWindow = {height: window.innerHeight, width: window.innerWidth};
+// const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 const tableHeight = 20;
 const tableWidth = 49;
 const randomSize = 400;
 let stopFlag = false;
+let showPopupValue = true;
 
 // Create Dijkstra
 // Create Johnsons
@@ -21,11 +22,11 @@ export const Graph = () => {
     const initialMatrix = {paramMatrix:adjacencyMatrix};
     // const [clearedMatrix, setClearedMatrix] = useState();
     // const [wall, setWall] = useState(false);
-    const [windowDimensions, setWindowDimensions] = useState(initialWindow);
+    // const [windowDimensions, setWindowDimensions] = useState(initialWindow);
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
     const [visibility, setVisibility] = useState(false);
     const [currentlySearching, setCurrentlySearching] = useState(false);
-    const [showPopup, setShowPopup] = useState(true);
+    const [showPopup, setShowPopup] = useState(showPopupValue);
 
     const stop = useRef(false);
 
@@ -37,26 +38,32 @@ export const Graph = () => {
         }, 1000);
 
         generateMaze();        
-        console.log(adjacencyMatrix);
+        // console.log(adjacencyMatrix);
         // setClearedMatrix(adjacencyMatrix);
         updateMatrix({paramMatrix:adjacencyMatrix});
         console.log('starting');
     }, [])
 
-    // Handles whenever the window resizes
     useEffect(() => {
-        const handleResize = () => {
-            setWindowDimensions({height: window.innerHeight, width: window.innerWidth})
+        if (showPopup === false) {
+            showPopupValue = false;
         }
-        window.addEventListener('resize', handleResize);
+    }, [showPopup]);
 
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        }
+    // Handles whenever the window resizes
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         setWindowDimensions({height: window.innerHeight, width: window.innerWidth})
+    //     }
+    //     window.addEventListener('resize', handleResize);
+
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     }
         
-    });
+    // });
 
-    console.log(windowDimensions.height, windowDimensions.width);    
+    // console.log(windowDimensions.height, windowDimensions.width);    
 
     const generateMaze = () => {
         
@@ -241,7 +248,7 @@ export const Graph = () => {
         const check = document.getElementsByClassName('searching');
         const path = document.getElementsByClassName('path');
 
-        return (check.length + path.length) != 0;
+        return (check.length + path.length) !== 0;
     }
 
     const clearSearch = () => {
@@ -275,6 +282,8 @@ export const Graph = () => {
                 break;
             case 'dfs':
                 await generateDFS();
+                break;
+            default:
                 break;
         }
         stop.current = false;
@@ -427,7 +436,7 @@ export const Graph = () => {
 
     return(
         <>
-            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag on the grid to create walls or use the Generate Random Maze button. You can even move the start and end nodes! Then select an algorithm!'}} />
+            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag inside the box to create walls or use the Generate Random Maze button. You can even move the Start and End nodes! Then select an algorithm!'}} />
             <div className='graph'>
                 <br/>
 
