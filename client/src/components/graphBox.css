@@ -26,3 +26,11 @@
         padding: 10px;
     }
 }
+
+@media screen and (max-height: 1000px) {
+    .box{
+        height: 3px;
+        width: 3px;
+        padding: 10px;
+    }
+}

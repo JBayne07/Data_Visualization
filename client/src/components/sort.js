@@ -1,4 +1,5 @@
 import { BarContainer } from "./barContainer";
+import { Popup } from "./popup";
 import { Button, Slider, Box } from "@mui/material";
 import './sort.css';
 import React, { useEffect, useState, useRef } from "react";
@@ -24,6 +25,7 @@ const swap = (array, num1, num2) => {
 export const Sort = () => {    
     const [fetched, setFetched] = useState(false);
     const [currentlySorting, setCurrentlySorting] = useState(false);
+    const [openPopup, setOpenPopup] = useState(true);
     const stop = useRef(false);
 
     useEffect (() => {
@@ -393,6 +395,7 @@ export const Sort = () => {
 
     return(
         <>
+            <Popup parameters={{open: openPopup, setOpen: setOpenPopup, titleText: 'Hint', descriptionText: 'Use the slider to change the size of the dataset then pick a sorting algorithm!'}} />
             <div className='sort' >
                 
                 <br/>
@@ -425,6 +428,9 @@ export const Sort = () => {
 
                     <Button variant="outlined" onClick={() => resetData(totalArr)} >
                         Reset Data
+                    </Button>
+                    <Button variant="outlined" onClick={() => setOpenPopup(true)} >
+                        Hint
                     </Button>
                 </>)}
                 

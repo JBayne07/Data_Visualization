@@ -1,5 +1,6 @@
 import {BoxRow} from './boxRow'
 import React from 'react';
+import './boxContainer.css';
 
 export const BoxContainer = (props) => {
 
