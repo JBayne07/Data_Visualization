@@ -2,8 +2,9 @@ import '../components/graph.css'
 import { Button, Box } from "@mui/material";
 import { BoxContainer } from "./boxContainer";
 import React, { useEffect, useState, useRef } from "react";
-const initialWindow = {height: window.innerHeight, width: window.innerWidth};
+import { Popup } from './popup';
 
+const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 const tableHeight = 20;
 const tableWidth = 49;
 const randomSize = 400;
@@ -24,6 +25,8 @@ export const Graph = () => {
     const [paramMatrix, updateMatrix] = useState(initialMatrix);
     const [visibility, setVisibility] = useState(false);
     const [currentlySearching, setCurrentlySearching] = useState(false);
+    const [showPopup, setShowPopup] = useState(true);
+
     const stop = useRef(false);
 
     const nodes = tableHeight*tableWidth;
@@ -427,6 +430,7 @@ export const Graph = () => {
 
     return(
         <>
+            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag on the grid to create walls or just generate a random maze. You can even move the start and end nodes! Then select an algorithm!'}} />
             <div className='graph'>
                 <br/>
 
@@ -443,6 +447,9 @@ export const Graph = () => {
                         </Button>
                         <Button variant="outlined" onClick={generateRandomMaze} >
                             Generate Random Maze
+                        </Button>
+                        <Button variant="outlined" onClick={() => setShowPopup(true)} >
+                            Hint
                         </Button>
                     </>
                 }
