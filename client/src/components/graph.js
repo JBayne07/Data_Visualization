@@ -430,7 +430,7 @@ export const Graph = () => {
 
     return(
         <>
-            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag on the grid to create walls or just generate a random maze. You can even move the start and end nodes! Then select an algorithm!'}} />
+            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag on the grid to create walls or use the Generate Random Maze button. You can even move the start and end nodes! Then select an algorithm!'}} />
             <div className='graph'>
                 <br/>
 
