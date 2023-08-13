@@ -3,6 +3,7 @@ import { Button, Box } from "@mui/material";
 import { BoxContainer } from "./boxContainer";
 import React, { useEffect, useState, useRef } from "react";
 import { Popup } from './popup';
+import { Heap } from 'heap-js';
 
 // const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 const tableHeight = 20;
@@ -283,6 +284,8 @@ export const Graph = () => {
             case 'dfs':
                 await generateDFS();
                 break;
+            case 'A*':
+                await generateAStar();
             default:
                 break;
         }
@@ -434,6 +437,88 @@ export const Graph = () => {
         }        
     }
 
+    const generateAStar = async () => {
+        const temp = paramMatrix.paramMatrix;
+        const startElement = document.getElementsByClassName('starting');
+        const targetElement = document.getElementsByClassName('target');
+        const startId = parseInt(startElement[0].id);
+        const targetId = parseInt(targetElement[0].id);
+        let path = new Array(nodes);
+        let reverse = [];
+
+        for(let i = 0; i < path.length; ++i){
+            path[i] = null;
+        }
+
+        await aStar(temp, startId, targetId, path)
+
+        for(let i = targetId; i !== null; i = path[i]){
+            if (stop.current) return;
+            reverse.push(i);
+        }
+        
+        for(let i = reverse.length-2; i > 0; --i){
+            if (stop.current) return;
+            await new Promise(resolve => setTimeout(resolve));
+            const tempElement = document.getElementById(reverse[i]);
+            tempElement.className = tempElement.className.concat(' path');
+        }
+
+        console.log('done');
+    }
+
+    const aStar = async (matrix, start, target, path) => {
+        const visited = new Array(nodes);
+        const costs = new Array(nodes);
+
+        const target_x = target % tableWidth;
+        const target_y = Math.floor(target/tableWidth);
+
+        for(let i = 0; i < visited.length; ++i){
+            costs[i] = -1;
+            visited[i] = false;
+        }
+        costs[start] = 0;
+        visited[start] = true;
+        
+        const customPriorityComparator = (a, b) => a.priority - b.priority;
+        const minHeap = new Heap(customPriorityComparator);
+        minHeap.init([]);
+        minHeap.push({val: start, priority: 0});
+
+        while (minHeap.size() > 0) {
+            if (stop.current) return;
+            await new Promise(resolve => setTimeout(resolve));
+
+            const popped = minHeap.pop().val;
+            const curCost = costs[popped];
+            
+            const element = document.getElementById(popped);
+            if (!element.className.includes('starting') && !element.className.includes('target')) {
+                element.className = element.className.concat(' searching');
+            }
+
+            for(let i = 0; i < nodes; ++i){
+                if((matrix[popped][i] === 1) && !(visited[i])){
+                    await new Promise(resolve => setTimeout(resolve));
+                    if(i === target){
+                        path[i] = popped;
+                        return;
+                    } 
+                    const y = Math.floor(i/tableWidth)
+                    const x = i % tableWidth;
+
+                    const realCost = curCost + 1
+                    const fCost = realCost + Math.abs(target_x - x) + Math.abs(target_y - y);
+
+                    minHeap.push({val: i, priority: fCost});
+                    path[i] = popped;
+                    visited[i] = true;
+                }
+            }
+        }
+    }
+
     return(
         <>
             <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag inside the box to create walls or use the Generate Random Maze button. You can even move the Start and End nodes! Then select an algorithm!'}} />
@@ -447,6 +532,9 @@ export const Graph = () => {
                     <>
                         <Button variant="outlined" onClick={() => searchHandler('dfs')} >
                             Depth First Search
+                        </Button> 
+                        <Button variant="outlined" onClick={() => searchHandler('A*')} >
+                            A*
                         </Button> 
                         <Button variant="outlined" onClick={clearMaze} >
                             Clear Maze
