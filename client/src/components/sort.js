@@ -2,6 +2,7 @@ import { BarContainer } from "./barContainer";
 import { Popup } from "./popup";
 import { Button, Slider, Box, Typography } from "@mui/material";
 import './sort.css';
+import SortHint from '../assets/sorting_hint.mp4';
 import React, { useEffect, useState, useRef, useReducer } from "react";
 import {useSpring, useSprings, Spring, animated} from 'react-spring';
 // let testArr = [38, 27, 43, 3, 9, 82, 10]
@@ -430,7 +431,7 @@ export const Sort = () => {
 
     return(
         <>
-            <Popup parameters={{open: openPopup, setOpen: setOpenPopup, titleText: 'Hint', descriptionText: 'Use the slider to change the size of the dataset then pick a sorting algorithm!'}} />
+            <Popup parameters={{open: openPopup, setOpen: setOpenPopup, titleText: 'Hint', src: SortHint}} />
             <div className='sort' >
                 
                 <br/>

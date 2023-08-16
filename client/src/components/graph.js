@@ -4,6 +4,7 @@ import { BoxContainer } from "./boxContainer";
 import React, { useEffect, useState, useRef } from "react";
 import { Popup } from './popup';
 import { Heap } from 'heap-js';
+import GraphHint from '../assets/graph_hint.mp4';
 
 // const initialWindow = {height: window.innerHeight, width: window.innerWidth};
 const tableHeight = 20;
@@ -522,7 +523,7 @@ export const Graph = () => {
 
     return(
         <>
-            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', descriptionText: 'Drag inside the box to create walls or use the Generate Random Maze button. You can even move the Start and End nodes! Then select an algorithm!'}} />
+            <Popup parameters={{open: showPopup, setOpen: setShowPopup, titleText: 'Hint', src: GraphHint}} />
             <div className='graph'>
                 <br/>
 

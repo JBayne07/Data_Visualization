@@ -6,7 +6,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -45,9 +45,7 @@ export const Popup = ({parameters}) => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     { parameters.titleText }
                 </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    { parameters.descriptionText }
-                </Typography>
+                <video src={parameters.src} width="824px" height="406px" autoPlay muted loop />
             </Box>
         </Modal>
     );
