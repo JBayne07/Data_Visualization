@@ -3,27 +3,49 @@
     flex-wrap: wrap;
     flex-direction: column;
     align-content: center;
-    margin: 4rem;
-    margin-top: 8rem;
+    height: 92.7vh;
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-start;
+    padding-left: 6rem;
+    padding-right: 6rem;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+    .textContainer{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
 }
 
 .contentContainer {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    margin-top: 2rem;
+    padding-top: 2rem;
 }
 
 .buttonContainer {
     display: flex;
     margin: auto;
-    /* width: 20.2rem; */
 }
 
-.mainTitle {
+.text {
     color: #1976d2;
 }
 
-.subTitle {
-    margin-top: 4rem;
-    color: #1976d2;
+.imageContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+.image {
+    cursor: pointer;
 }

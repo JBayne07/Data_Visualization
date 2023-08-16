@@ -1,6 +1,6 @@
 import { Bar } from "./bar";
 let currentArr = [];
-const width = 5;
+const width = 50;
 
 export const BarContainer = ({parameters}) => {
     currentArr = parameters.paramArr;

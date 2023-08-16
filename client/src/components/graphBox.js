@@ -22,6 +22,11 @@ export const GraphBox = (props) =>{
 
     const changeWall = () =>{
         element = document.getElementById(props.id);
+
+        if (element.className.includes('starting') || element.className.includes('target')) {
+            return;
+        }
+        
         if(wall){
             setClassName(wall, element);
             setWall(false);

@@ -33,3 +33,11 @@
         padding: 10px;
     }
 }
+
+@media screen and (max-height: 1000px) {
+    .legendBox {
+        width: 3px;
+        height: 3px;
+        padding: 10px;
+    }
+}

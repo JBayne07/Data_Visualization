@@ -32,6 +32,7 @@ export const Graph = () => {
     const stop = useRef(false);
 
     const nodes = tableHeight*tableWidth;
+
     useEffect(() =>{
         setTimeout(() =>{
             setVisibility(true);
@@ -246,22 +247,22 @@ export const Graph = () => {
     }
 
     const needReset = () => {
-        const check = document.getElementsByClassName('searching');
+        const searching = document.getElementsByClassName('searching');
         const path = document.getElementsByClassName('path');
 
-        return (check.length + path.length) !== 0;
+        return (searching.length + path.length) !== 0;
     }
 
     const clearSearch = () => {
-        const check = document.getElementsByClassName('searching');
+        const searching = document.getElementsByClassName('searching');
         const path = document.getElementsByClassName('path');
         
-        while (check.length > 0) {
-            check[0].className = check[0].className.replace('searching', '');
+        while (searching.length > 0) {
+            searching[0].className = searching[0].className.replace(' searching', '');
         }
         
         while (path.length > 0) {
-            path[0].className = path[0].className.replace('path', '');
+            path[0].className = path[0].className.replace(' path', '');
         }
     }
 
@@ -560,7 +561,7 @@ export const Graph = () => {
                     <label className='legendText'>
                         : Target
                     </label>
-                    <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#414141', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
+                    {/* <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#414141', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
                     <label className='legendText'>
                         : Walls
                     </label>
@@ -571,7 +572,7 @@ export const Graph = () => {
                     <Box className='legendBox' sx={{display:'flex', justifyContent: 'center', border: '1px solid grey', backgroundColor: '#4D57D2', marginRight: '0.5rem', marginLeft: '0.5rem'}} />
                     <label className='legendText'>
                         : Path
-                    </label>
+                    </label> */}
                 </div>
                 <br/>
             </div>

@@ -1,3 +1,42 @@
 .sortBars{
     border: 0.5px solid rgb(75, 71, 71);
 }
+
+.black {
+    background: linear-gradient(30deg, rgb(41, 41, 41), black 70%);
+}
+
+.green {
+    animation: switch 0.5s 1;
+    background: linear-gradient(30deg, #c8da98, #BFE45D 70%);
+}
+
+.pink {
+    background: linear-gradient(30deg, #d186cc, #D436CA 70%);
+}
+
+.grey {
+    background: linear-gradient(30deg, rgb(185, 184, 184), grey 70%);
+}
+
+.blue {
+    background: linear-gradient(30deg, #8389cc, #4D57D2 70%);
+}
+
+.orange {
+    background: linear-gradient(30deg, #d8b078, #E19223 70%);
+}
+
+@keyframes switch {
+    0% {
+        transform: translate(-50px, 0);
+        border: none;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: translate(0, 0);
+        border: 0.5px solid rgb(75, 71, 71);
+    }
+}
