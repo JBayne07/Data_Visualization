@@ -10,6 +10,7 @@ let totalArr = [];
 let arr = [];
 let shuffledArr = [];
 const initialParameters = {paramArr:totalArr};
+const baseURL = process.env.REACT_APP_BASEURL;
 
 // Need to add animation to make it look better
 // Add, less sleep time when you have larger data and higher sleep time when you have smaller data
@@ -31,7 +32,7 @@ export const Sort = () => {
 
     useEffect (() => {
         if (!fetched) {
-            fetch('http://localhost:9000/api/numbers',{
+            fetch(`${baseURL}numbers`,{
                 method: 'GET'
             })
             .then(response => response.json())        

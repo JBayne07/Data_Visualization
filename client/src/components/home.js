@@ -23,7 +23,7 @@ export const Home = () => {
                     </Typography>
 
                     <div className="imageContainer">
-                        <ImageList gap={'100px'} sx={{ width: 470, height: 185 }}>
+                        <ImageList gap={100} sx={{ width: 470, height: 185 }}>
                             <ImageListItem
                                 className="image"
                                 onClick={() => {history.push('/sort')}}
@@ -38,7 +38,7 @@ export const Home = () => {
                                         'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
                                     }}
                                     title={'SORTING'}
-                                    position="above"
+                                    position="top"
                                 />
                             </ImageListItem>
                             <ImageListItem
@@ -56,7 +56,7 @@ export const Home = () => {
                                         'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
                                     }}
                                     title={'GRAPH'}
-                                    position="above"
+                                    position="top"
                                 />
                             </ImageListItem>
                         </ImageList>
