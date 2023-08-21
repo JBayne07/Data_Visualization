@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require("fs");
+const https = require("https");
 const mongoose = require('mongoose');
 const routes = require('./routes/routes');
 require('dotenv').config();
@@ -23,6 +25,17 @@ app.use(function (req, res, next) {
 
 app.use('/api', routes);
 
-app.listen(port, () => {
-    console.log("Serving on port " + port);
-})
+https.createServer(
+    {
+        key: fs.readFileSync("server.key"),
+        cert: fs.readFileSync("server.cert"),
+    }, 
+    app
+).listen(port, () => {
+        console.log("Serving on port " + port);
+    }
+);
+
+// app.listen(Number(port) + 1, () => {
+//     console.log("Serving on port " + (Number(port) + 1));
+// })
